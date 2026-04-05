@@ -20,7 +20,7 @@ Doku/
 │   │   ├── App.jsx          # Main app with routing
 │   │   ├── api.js           # API client functions
 │   │   ├── frontmatter.js   # Client-side frontmatter parser
-│   │   ├── imageMarkdown.js # Image width/alignment preservation
+│   │   ├── imageMarkdown.js # Markdown extensions (images, HR, emoji, highlight)
 │   │   ├── useDocEditor.js  # Shared editor hook (BlockNote + auto-save)
 │   │   ├── useTheme.js      # Dark/light mode hook
 │   │   └── components/
@@ -42,21 +42,32 @@ Doku/
 
 ## Tech Stack
 
-- **Backend:** Node.js with Express 5
-- **Frontend:** React 19 with Vite 8
-- **Editor:** BlockNote (Notion-style block editor with Markdown I/O)
-- **UI library:** Mantine (used by BlockNote)
-- **Icons:** Animated SVG icons from pqoqubbw/icons (git submodule)
-- **Routing:** React Router v7
-- **Storage:** Plain `.md` files on the filesystem
+* **Backend:** Node.js with Express 5
+
+* **Frontend:** React 19 with Vite 8
+
+* **Editor:** BlockNote (Notion-style block editor with Markdown I/O)
+
+* **UI library:** Mantine (used by BlockNote)
+
+* **Icons:** Animated SVG icons from pqoqubbw/icons (git submodule)
+
+* **Routing:** React Router v7
+
+* **Storage:** Plain `.md` files on the filesystem
 
 ## Data Flow
 
 1. The **backend** reads `.md` files from the docs folder (passed as CLI argument) and serves them via REST API
+
 2. The **frontend** fetches the document tree and project config on load
+
 3. When a document is selected, the frontend fetches its content, strips frontmatter, and loads it into the BlockNote editor
+
 4. On edit, the editor auto-saves after 1 second: it converts blocks back to Markdown, re-attaches the frontmatter, and PUTs it to the API
+
 5. The API writes the file to disk
+
 6. Image drops are handled by BlockNote's upload callback, which POSTs to `/api/upload` and saves to `docs/assets/`
 
 ## No Database

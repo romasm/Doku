@@ -23,6 +23,8 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
   - `src/App.jsx` — main app with routing
   - `src/components/` — Sidebar, Editor, FolderView, SearchBar, Breadcrumb
   - `src/frontmatter.js` — client-side frontmatter parser
+  - `src/imageMarkdown.js` — markdown extensions (image properties, horizontal rules, emoji shortcodes, highlight)
+  - `src/useDocEditor.js` — shared editor hook (BlockNote init, auto-save, content loading)
   - `src/useTheme.js` — dark/light mode hook
 - `icons/` — animated icons submodule (pqoqubbw/icons)
 - `docs/` — default documentation content folder
@@ -47,3 +49,13 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
 - When the last child is deleted from a folder, the empty folder is automatically removed (reverting to a plain doc).
 - Images are stored in `docs/assets/` and embedded via drag-and-drop or BlockNote's image block.
 - `config.json` and `assets/` are excluded from the sidebar tree.
+- Deleting a folder-index doc also deletes the sibling folder and all its children.
+- Moving/renaming a folder-index doc also moves the sibling folder.
+
+## Markdown Extensions
+
+Beyond standard Markdown (headings, bold, italic, strikethrough, lists, code, blockquotes, tables, task lists, images, links), the editor supports:
+
+- **Horizontal rules** — `---`, `***`, or `___` render as a visual separator and roundtrip back to `---`
+- **Emoji shortcodes** — `:rocket:`, `:heart:`, etc. render as unicode emoji in the editor and save back as shortcodes
+- **Highlight** — `==text==` renders with a yellow background and roundtrips back to `==text==`

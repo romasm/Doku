@@ -13,6 +13,8 @@ The BlockNote editor supports standard keyboard shortcuts for fast editing.
 
 * **Ctrl+U** — Underline
 
+* **Ctrl+Shift+X** — Strikethrough
+
 ## Block Operations
 
 * **Enter** — Create a new block/paragraph

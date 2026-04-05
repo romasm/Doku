@@ -29,4 +29,4 @@ Changes are saved automatically after 1 second of inactivity. There is no manual
 
 ## Deleting a Document
 
-Click the **Delete** button in the top-right toolbar of any standalone document. Folder index pages cannot be deleted directly — remove all child documents first, and the folder will automatically revert to a plain document.
+Click the **Delete** button in the top-right toolbar of any document. Deleting a folder index page will also delete the folder and all its children.

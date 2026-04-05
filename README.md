@@ -17,6 +17,9 @@ A personal documentation system that stores docs as plain Markdown files and pro
 - **Image support** — drag and drop images into documents
 - **Frontmatter** — YAML metadata for ordering
 - **Breadcrumb navigation** — clickable path segments to navigate parent pages
+- **Emoji shortcodes** — `:rocket:`, `:heart:` etc. rendered as unicode emoji
+- **Highlight syntax** — `==text==` renders with yellow background
+- **Horizontal rules** — `---` renders as a visual separator
 - **No database** — the filesystem is the single source of truth
 
 ## AI-Friendly
