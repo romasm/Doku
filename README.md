@@ -9,7 +9,7 @@ A personal documentation system that stores docs as plain Markdown files and pro
 ## Features
 
 - **Markdown-first** — all documents are standard `.md` files on disk, editable with any tool
-- **WYSIWYG editor** — Notion-style block editor (BlockNote) with no raw Markdown editing
+- **WYSIWYG editor** — block editor (BlockNote) with no raw Markdown editing
 - **Hierarchical folders** — organize docs in nested folders with a collapsible sidebar tree
 - **Full-text search** — search bar at the top of the sidebar with highlighted snippets
 - **Auto-save** — changes save automatically (1-second debounce)
