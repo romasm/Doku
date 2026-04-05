@@ -82,17 +82,19 @@
   background: none !important;
   border: none !important;
   color: var(--color-text-secondary) !important;
-  transition: color 0.15s !important;
+  transition: color 0.15s, opacity 0.15s !important;
+  opacity: 0.6;
 }
 
 .editor-blocknote .bn-side-menu button:hover {
   color: var(--color-primary) !important;
+  opacity: 1;
 }
 
-/* Hide BlockNote's default SVG icons, our animated icons are injected via React */
-.editor-blocknote .bn-side-menu button > svg,
-.editor-blocknote .bn-side-menu button > span.m_8d3afb97 {
-  display: none !important;
+.editor-blocknote .bn-side-menu button svg {
+  fill: currentColor !important;
+  width: 18px !important;
+  height: 18px !important;
 }
 
 /* Code block styling */

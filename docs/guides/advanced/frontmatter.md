@@ -22,15 +22,19 @@ Content goes here...
 
 ### ordering
 
-- **Type:** number
-- **Purpose:** Controls the position of this entry in the sidebar
-- **Behavior:** Entries with ordering values appear first (sorted ascending). Entries without ordering appear after, sorted alphabetically by filename. Ordering works across both files and folders — they intermix freely.
+* **Type:** number
+
+* **Purpose:** Controls the position of this entry in the sidebar
+
+* **Behavior:** Entries with ordering values appear first (sorted ascending). Entries without ordering appear after, sorted alphabetically by filename. Ordering works across both files and folders — they intermix freely.
 
 ## How Frontmatter Is Handled
 
-- **In the UI:** Frontmatter is completely invisible. The editor only shows the document body.
-- **On save:** The editor preserves any existing frontmatter and re-attaches it to the saved content. Editing a document will never lose its frontmatter.
-- **On disk:** Frontmatter is standard YAML and can be edited with any text editor.
+* **In the UI:** Frontmatter is completely invisible. The editor only shows the document body.
+
+* **On save:** The editor preserves any existing frontmatter and re-attaches it to the saved content. Editing a document will never lose its frontmatter.
+
+* **On disk:** Frontmatter is standard YAML and can be edited with any text editor.
 
 ## Editing Frontmatter
 

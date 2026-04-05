@@ -7,7 +7,6 @@ import { parseFrontmatter, serializeFrontmatter } from '../frontmatter';
 import { useTheme } from '../useTheme';
 import { DeleteIcon, MaximizeIcon, MinimizeIcon } from './icons';
 import Breadcrumb from './Breadcrumb';
-import { useSideMenuIcons } from './SideMenuIcons';
 import './Editor.css';
 
 export default function Editor({ content, docPath, onSave, onDelete, isFolder, fullWidth, onToggleWidth }) {
@@ -15,7 +14,6 @@ export default function Editor({ content, docPath, onSave, onDelete, isFolder, f
   const frontmatterRef = useRef({});
   const editorContainerRef = useRef(null);
   const theme = useTheme();
-  useSideMenuIcons(editorContainerRef);
 
   const editor = useCreateBlockNote({
     initialContent: undefined,

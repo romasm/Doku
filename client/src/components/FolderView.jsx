@@ -9,7 +9,6 @@ import { parseFrontmatter, serializeFrontmatter } from '../frontmatter';
 import { useTheme } from '../useTheme';
 import { FileTextIcon, FolderOpenIcon, MaximizeIcon, MinimizeIcon } from './icons';
 import Breadcrumb from './Breadcrumb';
-import { useSideMenuIcons } from './SideMenuIcons';
 import './FolderView.css';
 
 export default function FolderView({ folderPath, onTreeChange, fullWidth, onToggleWidth }) {
@@ -19,7 +18,6 @@ export default function FolderView({ folderPath, onTreeChange, fullWidth, onTogg
   const frontmatterRef = useRef({});
   const editorContainerRef = useRef(null);
   const theme = useTheme();
-  useSideMenuIcons(editorContainerRef);
 
   const editor = useCreateBlockNote({ initialContent: undefined });
 
