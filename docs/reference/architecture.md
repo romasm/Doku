@@ -33,7 +33,7 @@ Doku/
 ├── docs/                    # Documentation content (Markdown)
 │   ├── config.json          # Project config (projectName)
 │   └── assets/              # Uploaded images
-├── start.bat                # Build + launch script
+├── open_docs.bat / open_docs.sh                # Build + launch script
 ├── vite.config.js           # Vite configuration
 └── package.json
 ```

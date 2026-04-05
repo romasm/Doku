@@ -27,7 +27,7 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
 - `docs/` — default documentation content folder
   - `config.json` — project config (projectName)
   - `assets/` — uploaded images
-- `start.bat` — builds frontend + launches server
+- `open_docs.bat` — builds frontend + launches server
 
 ## Configuration
 

@@ -30,7 +30,8 @@ node server/index.js          # Backend on port 4782
 npx vite                      # Frontend on port 5173 with hot reload
 
 # Or build and run in production
-start.bat                     # Builds frontend, starts server, opens browser
+open_docs.bat                     # Windows: builds, starts server, opens browser
+./open_docs.sh                    # macOS/Linux: same thing
 ```
 
 Open `http://localhost:4782` (production) or `http://localhost:5173` (development).
@@ -41,7 +42,8 @@ Pass a path as a CLI argument to serve docs from a different location:
 
 ```bash
 node server/index.js ./my-docs
-start.bat C:/Users/me/notes
+open_docs.bat C:/Users/me/notes       # Windows
+./open_docs.sh ~/notes                # macOS/Linux
 ```
 
 Defaults to `./docs` if omitted.
@@ -104,4 +106,4 @@ Content here...
 
 ## License
 
-ISC
+MIT

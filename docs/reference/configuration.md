@@ -12,8 +12,8 @@ The docs folder path is passed as a command-line argument when starting the serv
 ```text
 node server/index.js ./docs
 node server/index.js C:/Users/me/my-knowledge-base
-start.bat ./docs
-start.bat ../other-docs
+open_docs.bat ./docs
+open_docs.bat ../other-docs
 ```
 
 If omitted, it defaults to `./docs` relative to the current working directory.
@@ -58,4 +58,4 @@ npx vite build                  # Build frontend to dist/
 node server/index.js ./docs     # Serves API + frontend on port 4782
 ```
 
-Or use `start.bat [docs-path]` which automates the build and launch.
+Or use `open_docs.bat [docs-path]` which automates the build and launch.

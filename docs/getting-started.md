@@ -8,7 +8,7 @@ Welcome to **Doku** — a personal documentation system that stores your docs as
 ## Quick Start
 
 1. Open a terminal in the Doku project folder
-2. Run `start.bat` (or `node server/index.js` + `npx vite` for development)
+2. Run `open_docs.bat` (or `node server/index.js` + `npx vite` for development)
 3. Open `http://localhost:4782` in your browser
 4. Start creating and organizing your documentation
 
