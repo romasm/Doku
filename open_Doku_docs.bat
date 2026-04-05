@@ -22,15 +22,15 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Kill any existing process on port 3001
-for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":3001.*LISTENING"') do taskkill /f /pid %%a >nul 2>&1
+REM Kill any existing process on port 4782
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":4782.*LISTENING"') do taskkill /f /pid %%a >nul 2>&1
 
 echo.
-echo Doku will be available at http://localhost:3001
+echo Doku will be available at http://localhost:4782
 echo Close this window to stop the server.
 echo.
 
-start "" http://localhost:3001
+start "" http://localhost:4782
 
 node server/index.js %DOCS_PATH%
 

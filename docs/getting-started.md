@@ -8,26 +8,22 @@ Welcome to **Doku** — a personal documentation system that stores your docs as
 ## Quick Start
 
 1. Open a terminal in the Doku project folder
-
 2. Run `start.bat` (or `node server/index.js` + `npx vite` for development)
-
-3. Open `http://localhost:3001` in your browser
-
+3. Open `http://localhost:4782` in your browser
 4. Start creating and organizing your documentation
 
 ## Key Features
 
-* **Markdown storage** — all documents are plain `.md` files on disk, editable with any text editor
-
-* **WYSIWYG editor** — rich block editor (BlockNote) so you never write raw Markdown in the UI
-
-* **Hierarchical structure** — organize docs in nested folders with a sidebar tree
-
-* **Full-text search** — instantly search across all your documents
-
-* **Auto-save** — changes are saved automatically as you type (1-second debounce)
-
-* **Frontmatter** — each file supports YAML frontmatter for metadata like ordering (hidden in the UI)
+- **Markdown storage** — all documents are plain `.md` files on disk, editable with any text editor
+- **WYSIWYG editor** — rich block editor (BlockNote) so you never write raw Markdown in the UI
+- **Hierarchical structure** — organize docs in nested folders with a sidebar tree
+- **Full-text search** — instantly search across all your documents
+- **Auto-save** — changes are saved automatically as you type (1-second debounce)
+- **Dark mode** — toggle between light and dark themes, with preference saved
+- **Image support** — drag and drop images into documents, stored in the assets folder
+- **Breadcrumb navigation** — clickable path segments to navigate to parent pages
+- **Width toggle** — switch between narrow and full-width document view
+- **Frontmatter** — each file supports YAML frontmatter for metadata like ordering (hidden in the UI)
 
 ## How It Works
 

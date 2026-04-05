@@ -5,6 +5,14 @@ ordering: 1
 
 Doku exposes a REST API on the Express backend. All endpoints are prefixed with `/api`.
 
+## Configuration
+
+### GET /api/config
+
+Returns public configuration for the frontend.
+
+**Response:** `{ "projectName": "My Project" }`
+
 ## Document Endpoints
 
 ### GET /api/doc/:path
@@ -47,6 +55,22 @@ Get a folder's index content and children list.
 Create a folder. If no sibling index `.md` file exists, one is created automatically.
 
 **Request body:** `{ "path": "folder/path" }`
+
+## Image Upload
+
+### POST /api/upload
+
+Upload an image file. Images are saved to `docs/assets/` with a unique hex filename.
+
+**Request:** multipart form data with an `image` field containing the file.
+
+**Response:** `{ "url": "/api/assets/abc123.png", "filename": "abc123.png" }`
+
+Supported formats: png, jpg, jpeg, gif, webp, svg, bmp. Max size: 10MB.
+
+### GET /api/assets/:filename
+
+Serves uploaded images as static files from the assets directory.
 
 ## Tree and Search
 

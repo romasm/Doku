@@ -38,7 +38,7 @@ Place a `config.json` file inside your docs folder to configure project-level se
 
 ## Ports
 
-* **Backend (Express):** port 3001 by default. Override with the `PORT` environment variable.
+* **Backend (Express):** port 4782 by default. Override with the `PORT` environment variable.
 
 * **Dev frontend (Vite):** port 5173. The Vite dev server proxies `/api` requests to the backend.
 
@@ -47,7 +47,7 @@ Place a `config.json` file inside your docs folder to configure project-level se
 **Development** (two processes):
 
 ```text
-node server/index.js ./docs     # Backend on port 3001
+node server/index.js ./docs     # Backend on port 4782
 npx vite                        # Frontend on port 5173 (proxies API)
 ```
 
@@ -55,7 +55,7 @@ npx vite                        # Frontend on port 5173 (proxies API)
 
 ```text
 npx vite build                  # Build frontend to dist/
-node server/index.js ./docs     # Serves API + frontend on port 3001
+node server/index.js ./docs     # Serves API + frontend on port 4782
 ```
 
 Or use `start.bat [docs-path]` which automates the build and launch.
