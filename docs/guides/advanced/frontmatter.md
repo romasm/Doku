@@ -29,6 +29,20 @@ Content goes here...
 
 * **Behavior:** Entries with ordering values appear first (sorted ascending). Entries without ordering appear after, sorted alphabetically by filename. Ordering works across both files and folders — they intermix freely.
 
+### icon
+
+* **Type:** string (emoji)
+
+* **Purpose:** Sets a custom emoji icon for the document in the sidebar
+
+* **Behavior:** When set, the emoji replaces the default file or folder icon. You can set it via the emoji picker in the toolbar or by editing the frontmatter directly.
+
+```markdown
+---
+icon: 🚀
+---
+```
+
 ## How Frontmatter Is Handled
 
 * **In the UI:** Frontmatter is completely invisible. The editor only shows the document body.

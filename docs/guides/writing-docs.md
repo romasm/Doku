@@ -31,6 +31,21 @@ Doku uses BlockNote, a Notion-like block editor. You can:
 
 Changes are saved automatically after 1 second of inactivity. There is no manual save button — just type and your work is preserved. All formatting — including colors, alignment, highlights, and underlines — is preserved in the markdown file.
 
+## Page Icons
+
+Click the smiley face button next to the breadcrumb path to open the emoji picker and set a page icon. The chosen emoji replaces the default file or folder icon in the sidebar.
+
+To remove an icon, open the picker and click the clear button.
+
+Icons are stored as an `icon` field in the document's frontmatter:
+
+```text
+---
+ordering: 1
+icon: 🚀
+---
+```
+
 ## Deleting a Document
 
 Click the **Delete** button in the top-right toolbar of any document. Deleting a folder index page will also delete the folder and all its children.

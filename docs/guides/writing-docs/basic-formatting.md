@@ -47,7 +47,7 @@ This is ==highlighted text==.
 
 ## Underline
 
-Use `<ins>` tags or the keyboard shortcut **Ctrl+U** for underlined text.
+Use the keyboard shortcut **Ctrl+U** for <ins>underlined text</ins>.
 
 ```text
 This is <ins>underlined text</ins>.
@@ -55,17 +55,20 @@ This is <ins>underlined text</ins>.
 
 ## Text Color
 
-Select text and use the color picker in the toolbar to change its color. The color is saved in the file using HTML comment wrappers.
+Select text and use the color picker in the toolbar to change its color, like this <!--tc:red-->red word<!--/tc--> or this <!--tc:blue-->blue word<!--/tc-->.
 
 ```text
 This has <!--tc:red-->red text<!--/tc--> in it.
 ```
 
-Available colors include red, orange, yellow, green, blue, purple, pink, gray, and brown.
+Available colors: red, orange, yellow, green, blue, purple, pink, gray, and brown.
 
 ## Background Color
 
-Select a block and use the color picker to set a background color. This is saved as a metadata comment above the block.
+Select a block and use the color picker to set a background color.
+
+<!--blockProps:{"backgroundColor":"yellow"}-->
+This paragraph has a yellow background.
 
 ```text
 <!--blockProps:{"backgroundColor":"yellow"}-->
@@ -74,7 +77,10 @@ This paragraph has a yellow background.
 
 ## Text Alignment
 
-Use the block menu to set alignment to center, right, or justify. This is saved as a metadata comment.
+Use the block menu to set alignment to center, right, or justify.
+
+<!--blockProps:{"textAlignment":"center"}-->
+This paragraph is centered.
 
 ```text
 <!--blockProps:{"textAlignment":"center"}-->
