@@ -64,7 +64,7 @@ console.log(`
   Port: 4782
 
   To start:
-    npx dokumd ${targetArg}
+    npx @romansmirnov/doku ${targetArg}
 
   Or with the convenience script:
     open_docs.bat ${targetArg}

@@ -1,10 +1,10 @@
 {
-  "name": "dokumd",
+  "name": "@romansmirnov/doku",
   "version": "1.0.0",
   "description": "Personal documentation system with Markdown storage and WYSIWYG editing",
   "main": "server/index.js",
   "bin": {
-    "dokumd": "bin/doku.js"
+    "doku": "bin/doku.js"
   },
   "files": [
     "bin/",

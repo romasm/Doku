@@ -7,8 +7,8 @@ Welcome to **Doku** — a personal documentation system that stores your docs as
 
 ## Quick Start
 
-1. Initialize a docs folder: `npx dokumd init ./my-docs`
-2. Start the server: `npx dokumd ./my-docs`
+1. Initialize a docs folder: `npx @romansmirnov/doku init ./my-docs`
+2. Start the server: `npx @romansmirnov/doku ./my-docs`
 3. Open `http://localhost:4782` in your browser
 4. Start creating and organizing your documentation
 

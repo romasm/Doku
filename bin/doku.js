@@ -10,14 +10,14 @@ if (command === 'init') {
 Doku — personal documentation system
 
 Usage:
-  dokumd init <path>    Initialize a new docs folder
-  dokumd [path]         Start the server (default: ./docs)
-  dokumd help           Show this help message
+  doku init <path>    Initialize a new docs folder
+  doku [path]         Start the server (default: ./docs)
+  doku help           Show this help message
 
 Examples:
-  dokumd init ./my-docs
-  dokumd ./my-docs
-  dokumd
+  doku init ./my-docs
+  doku ./my-docs
+  doku
 `);
 } else {
   // Treat argument as docs path, start the server

@@ -24,10 +24,10 @@ A personal documentation system that stores docs as plain Markdown files and pro
 
 ```bash
 # Initialize a new docs folder
-npx dokumd init ./my-docs
+npx @romansmirnov/doku init ./my-docs
 
 # Start the server
-npx dokumd ./my-docs
+npx @romansmirnov/doku ./my-docs
 ```
 
 Open `http://localhost:4782` in your browser.
