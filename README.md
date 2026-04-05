@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="doku.png" alt="Doku" width="256" />
+  <img src="doku.png" alt="Doku" width="800" />
 </p>
 
 # Doku
