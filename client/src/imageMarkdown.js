@@ -45,7 +45,7 @@ const EMOJI_MAP = {
   'heavy_check_mark': '\u2714\uFE0F', 'heavy_minus_sign': '\u2796',
   'heavy_plus_sign': '\u2795', 'herb': '\u{1F33F}',
   'house': '\u{1F3E0}', 'hugs': '\u{1F917}', 'hushed': '\u{1F62F}',
-  'idea': '\u{1F4A1}', 'information_source': '\u2139\uFE0F',
+  'idea': '\u{1F4A1}', 'imp': '\u{1F47F}', 'information_source': '\u2139\uFE0F',
   'innocent': '\u{1F607}',
   'joy': '\u{1F602}',
   'key': '\u{1F511}', 'keyboard': '\u2328\uFE0F', 'kissing_heart': '\u{1F618}',
@@ -106,10 +106,14 @@ const EMOJI_MAP = {
   'yum': '\u{1F60B}', 'zap': '\u26A1', 'zzz': '\u{1F4A4}',
 };
 
-// Build reverse map (unicode → shortcode) for export
+// Build reverse map (unicode → shortcode) for export.
+// When multiple shortcodes map to the same unicode, prefer the shorter/more common name.
 const UNICODE_TO_EMOJI = {};
 for (const [code, unicode] of Object.entries(EMOJI_MAP)) {
-  UNICODE_TO_EMOJI[unicode] = code;
+  const existing = UNICODE_TO_EMOJI[unicode];
+  if (!existing || code.length < existing.length) {
+    UNICODE_TO_EMOJI[unicode] = code;
+  }
 }
 
 // Regex to match all unicode emoji we know about (sorted longest first to avoid partial matches)
@@ -214,6 +218,28 @@ function replaceHtmlEntities(text) {
   return result;
 }
 
+// ── Code block protection ───────────────────────────────────────────────────
+// Extract fenced code blocks before preprocessing so their content isn't transformed.
+// Returns { text, codeBlocks } where text has placeholders and codeBlocks is an array.
+
+const CODE_PLACEHOLDER_PREFIX = '\uFFF1CB\uFFF1';
+
+function extractCodeBlocks(text) {
+  const codeBlocks = [];
+  const result = text.replace(/^(`{3,})[^\n]*\n[\s\S]*?\n\1\s*$/gm, (match) => {
+    const idx = codeBlocks.length;
+    codeBlocks.push(match);
+    return `${CODE_PLACEHOLDER_PREFIX}${idx}`;
+  });
+  return { text: result, codeBlocks };
+}
+
+function restoreCodeBlocks(text, codeBlocks) {
+  return text.replace(new RegExp(`${CODE_PLACEHOLDER_PREFIX}(\\d+)`, 'g'), (_, idx) => {
+    return codeBlocks[parseInt(idx, 10)] || '';
+  });
+}
+
 // ── Export: blocks → markdown ───────────────────────────────────────────────
 
 export async function blocksToMarkdown(editor) {
@@ -272,8 +298,10 @@ export async function blocksToMarkdown(editor) {
     '<!--tc:$1-->$2<!--/tc-->'
   );
 
-  // Restore emoji unicode → shortcodes
-  md = replaceUnicodeWithShortcodes(md);
+  // Protect code blocks from emoji shortcode conversion
+  const { text: mdNoCode, codeBlocks: exportCodeBlocks } = extractCodeBlocks(md);
+  md = replaceUnicodeWithShortcodes(mdNoCode);
+  md = restoreCodeBlocks(md, exportCodeBlocks);
 
   // Replace ![caption](url) with <img> tags that include width and alignment
   md = md.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, url) => {
@@ -305,9 +333,13 @@ export async function blocksToMarkdown(editor) {
 export function preprocessMarkdown(body) {
   const imageProps = {};
 
+  // Protect fenced code blocks from all transformations
+  const { text: withoutCode, codeBlocks } = extractCodeBlocks(body);
+  let processed = withoutCode;
+
   // Strip markdown comments ([text]: #) — store them so we can restore on save
   const comments = [];
-  let processed = body.replace(/^\[([^\]]*)\]:\s*#\s*$/gm, (match, text) => {
+  processed = processed.replace(/^\[([^\]]*)\]:\s*#\s*$/gm, (match, text) => {
     comments.push(match);
     return '';
   });
@@ -383,6 +415,9 @@ export function preprocessMarkdown(body) {
       return `![${alt}](${src})`;
     }
   );
+
+  // Restore protected code blocks
+  processed = restoreCodeBlocks(processed, codeBlocks);
 
   return { processed, imageProps, comments, blockPropsMap };
 }

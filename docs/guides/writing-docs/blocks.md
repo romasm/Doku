@@ -40,10 +40,6 @@ Start a line with `>` to create a blockquote.
 > This is a blockquote.
 ```
 
-You can span multiple lines:
-
-> First line of the quote. Second line continues here.
-
 ## Code Blocks
 
 Wrap code in triple backticks. Add a language name after the opening backticks for syntax highlighting.

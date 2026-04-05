@@ -39,37 +39,33 @@ This is ~~strikethrough text~~.
 
 ## Highlight
 
-Wrap text in double equals signs for ==highlighted text==.
+Wrap text in `==double equals==` for a yellow highlight background.
 
 ```text
 This is ==highlighted text==.
 ```
 
-The text renders with a yellow background in the editor and saves back as `==text==` in the markdown file.
-
 ## Underline
 
-Use HTML `<ins>` tags for <ins>underlined text</ins>.
+Use `<ins>` tags or the keyboard shortcut **Ctrl+U** for underlined text.
 
 ```text
 This is <ins>underlined text</ins>.
 ```
 
-You can also use the keyboard shortcut **Ctrl+U** in the editor.
-
 ## Text Color
 
-Select text and use the color picker in the toolbar to change its color. The color is saved in the markdown file as an HTML comment wrapper:
+Select text and use the color picker in the toolbar to change its color. The color is saved in the file using HTML comment wrappers.
 
 ```text
-This has <!--tc:red-->red text<!--/tc--> in a sentence.
+This has <!--tc:red-->red text<!--/tc--> in it.
 ```
 
 Available colors include red, orange, yellow, green, blue, purple, pink, gray, and brown.
 
 ## Background Color
 
-Select a block and use the color picker to set a background color. This is saved as a block metadata comment:
+Select a block and use the color picker to set a background color. This is saved as a metadata comment above the block.
 
 ```text
 <!--blockProps:{"backgroundColor":"yellow"}-->
@@ -78,7 +74,7 @@ This paragraph has a yellow background.
 
 ## Text Alignment
 
-Use the block menu (click the drag handle or press `/`) to set alignment to center, right, or justify:
+Use the block menu to set alignment to center, right, or justify. This is saved as a metadata comment.
 
 ```text
 <!--blockProps:{"textAlignment":"center"}-->
