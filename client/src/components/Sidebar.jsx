@@ -64,7 +64,7 @@ function TreeItem({ item, onNewDoc }) {
   );
 }
 
-export default function Sidebar({ tree, onNewDoc, onSearchSelect, sidebarWidth, onResize }) {
+export default function Sidebar({ tree, projectName, onNewDoc, onSearchSelect, sidebarWidth, onResize }) {
   const resizing = useRef(false);
 
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function Sidebar({ tree, onNewDoc, onSearchSelect, sidebarWidth, 
   return (
     <aside className="sidebar" style={{ width: sidebarWidth, minWidth: 200 }}>
       <div className="sidebar-header">
-        <h2 className="sidebar-title">Doku</h2>
+        <h2 className="sidebar-title">{projectName || 'Doku'}</h2>
       </div>
       <div className="sidebar-search">
         <SearchBar onSelect={onSearchSelect} />

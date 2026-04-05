@@ -8,6 +8,11 @@ const { parseFrontmatter, extractTitle, formatName } = require('./frontmatter');
 const router = express.Router();
 const DOCS_DIR = config.docsPath;
 
+// GET /api/config — public config for frontend
+router.get('/config', (req, res) => {
+  res.json({ projectName: config.projectName });
+});
+
 // Express 5 returns wildcard params as arrays — join them back into a path string
 function getDocPath(params) {
   const p = params.docPath;
@@ -42,7 +47,7 @@ function buildTree(dirPath, basePath = '') {
   );
 
   for (const entry of entries) {
-    if (entry.name.startsWith('.') || entry.name === '_meta.json') continue;
+    if (entry.name.startsWith('.') || entry.name === '_meta.json' || entry.name === 'config.json') continue;
 
     const relativePath = basePath ? `${basePath}/${entry.name}` : entry.name;
 

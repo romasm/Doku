@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Editor from './components/Editor';
 import FolderView from './components/FolderView';
-import { fetchTree, fetchDoc, saveDoc, deleteDoc, createFolder } from './api';
+import { fetchConfig, fetchTree, fetchDoc, saveDoc, deleteDoc, createFolder } from './api';
 import './App.css';
 
 function DocPage({ onTreeChange }) {
@@ -96,6 +96,7 @@ function DocPage({ onTreeChange }) {
 
 export default function App() {
   const [tree, setTree] = useState([]);
+  const [projectName, setProjectName] = useState('Doku');
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const navigate = useNavigate();
 
@@ -105,6 +106,7 @@ export default function App() {
 
   useEffect(() => {
     loadTree();
+    fetchConfig().then((c) => setProjectName(c.projectName)).catch(() => {});
   }, [loadTree]);
 
   // "New Document" handler used by both sidebar entries and root button.
@@ -151,6 +153,7 @@ export default function App() {
     <>
       <Sidebar
         tree={tree}
+        projectName={projectName}
         onNewDoc={handleNewDoc}
         onSearchSelect={handleSearchSelect}
         sidebarWidth={sidebarWidth}

@@ -1,5 +1,9 @@
 @echo off
+title Doku Server
 cd /d "%~dp0"
+
+set DOCS_PATH=%~1
+if "%DOCS_PATH%"=="" set DOCS_PATH=./docs
 
 echo Cleaning previous build...
 if exist dist (
@@ -11,18 +15,25 @@ if exist dist (
 )
 
 echo Building frontend...
-call npx vite build
+cmd /c npx vite build
 if errorlevel 1 (
     echo Build failed!
     pause
     exit /b 1
 )
 
-echo.
-echo Starting Doku server...
-start "" http://localhost:3001
-timeout /t 1 /nobreak >nul
+REM Kill any existing process on port 3001
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":3001.*LISTENING"') do taskkill /f /pid %%a >nul 2>&1
 
-echo Doku is running at http://localhost:3001
+echo.
+echo Doku will be available at http://localhost:3001
 echo Close this window to stop the server.
-node server/index.js
+echo.
+
+start "" http://localhost:3001
+
+node server/index.js %DOCS_PATH%
+
+echo.
+echo Server stopped.
+pause

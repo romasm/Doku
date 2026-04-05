@@ -1,17 +1,25 @@
 const fs = require('fs');
 const path = require('path');
 
-const CONFIG_PATH = path.join(__dirname, '..', 'config.json');
-const ROOT_DIR = path.join(__dirname, '..');
+// Docs path from CLI argument or default to ./docs (relative to CWD)
+const docsArg = process.argv[2] || './docs';
+const docsPath = path.resolve(process.cwd(), docsArg);
 
-let config = { docsPath: './docs' };
+// Config lives inside the docs folder
+const configPath = path.join(docsPath, 'config.json');
 
-if (fs.existsSync(CONFIG_PATH)) {
-  const raw = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
-  Object.assign(config, raw);
+let config = {
+  docsPath,
+  projectName: 'Doku',
+};
+
+if (fs.existsSync(configPath)) {
+  try {
+    const raw = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    if (raw.projectName) config.projectName = raw.projectName;
+  } catch {
+    // ignore invalid config
+  }
 }
-
-// Resolve docsPath relative to project root
-config.docsPath = path.resolve(ROOT_DIR, config.docsPath);
 
 module.exports = config;

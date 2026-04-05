@@ -1,5 +1,11 @@
 const BASE = '/api';
 
+export async function fetchConfig() {
+  const res = await fetch(`${BASE}/config`);
+  if (!res.ok) throw new Error('Failed to load config');
+  return res.json();
+}
+
 export async function fetchTree() {
   const res = await fetch(`${BASE}/tree`);
   if (!res.ok) throw new Error('Failed to load tree');

@@ -3,27 +3,36 @@ ordering: 2
 ---
 # Configuration
 
-Doku is configured through `config.json` in the project root.
+Doku is configured through two mechanisms: a CLI argument for the docs path, and a `config.json` inside the docs folder.
+
+## Docs Path (CLI Argument)
+
+The docs folder path is passed as a command-line argument when starting the server:
+
+```
+node server/index.js ./docs
+node server/index.js C:/Users/me/my-knowledge-base
+start.bat ./docs
+start.bat ../other-docs
+```
+
+If omitted, it defaults to `./docs` relative to the current working directory.
 
 ## config.json
 
+Place a `config.json` file inside your docs folder to configure project-level settings:
+
 ```json
 {
-  "docsPath": "./docs"
+  "projectName": "My Knowledge Base"
 }
 ```
 
-### docsPath
+### projectName
 
 - **Type:** string
-- **Default:** `"./docs"`
-- **Description:** Relative or absolute path to the folder where Markdown files are stored. Resolved relative to the project root.
-
-**Examples:**
-
-- `"./docs"` — default, docs folder inside the project
-- `"../my-knowledge-base"` — a folder one level up
-- `"C:/Users/me/Documents/notes"` — an absolute path
+- **Default:** `"Doku"`
+- **Description:** The name displayed at the top of the sidebar. Use this to label different documentation projects.
 
 ## Ports
 
@@ -35,17 +44,15 @@ Doku is configured through `config.json` in the project root.
 **Development** (two processes):
 
 ```
-node server/index.js     # Backend on port 3001
-npx vite                 # Frontend on port 5173 (proxies API)
+node server/index.js ./docs     # Backend on port 3001
+npx vite                        # Frontend on port 5173 (proxies API)
 ```
-
-Open `http://localhost:5173` for hot-reloading during development.
 
 **Production** (single process):
 
 ```
-npx vite build           # Build frontend to dist/
-node server/index.js     # Serves API + frontend on port 3001
+npx vite build                  # Build frontend to dist/
+node server/index.js ./docs     # Serves API + frontend on port 3001
 ```
 
-Open `http://localhost:3001`. The `start.bat` script automates this.
+Or use `start.bat [docs-path]` which automates the build and launch.
