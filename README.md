@@ -107,14 +107,19 @@ Documents support optional YAML frontmatter for metadata:
 ```markdown
 ---
 ordering: 1
+icon: 🚀
 ---
 # My Document
 
 Content here...
 ```
 
-- `ordering` — controls position in the sidebar (lower values first, unordered items last)
-- Frontmatter is completely hidden in the editor UI and preserved on save
+| Field | Type | Description |
+|-------|------|-------------|
+| ordering | number | Controls position in the sidebar (lower values first, unordered items last) |
+| icon | string | An emoji shown instead of the default file/folder icon in the sidebar. Can be set via the emoji picker in the toolbar or directly in the file. |
+
+Frontmatter is completely hidden in the editor UI and preserved on save.
 
 ## Tech Stack
 
