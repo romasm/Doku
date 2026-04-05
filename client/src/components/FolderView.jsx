@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { BlockNoteView } from '@blocknote/mantine';
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
-import { fetchFolder, saveFolderIndex } from '../api';
+import { fetchFolder, saveFolderIndex, openFolder } from '../api';
 import { useDocEditor } from '../useDocEditor';
 import { useTheme } from '../useTheme';
 import { FileTextIcon, FolderOpenIcon, MaximizeIcon, MinimizeIcon } from './icons';
@@ -46,6 +46,9 @@ export default function FolderView({ folderPath, onTreeChange, fullWidth, onTogg
         <div className="editor-toolbar-actions">
           <button className="editor-width-btn" onClick={onToggleWidth} title={fullWidth ? 'Narrow view' : 'Full width'}>
             {fullWidth ? <MinimizeIcon size={16} /> : <MaximizeIcon size={16} />}
+          </button>
+          <button className="editor-action-btn" onClick={() => openFolder(folderPath)} title="Open folder">
+            <FolderOpenIcon size={16} />
           </button>
         </div>
       </div>

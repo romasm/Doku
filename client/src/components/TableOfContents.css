@@ -1,18 +1,13 @@
-/* Floating overlay, 50px from right edge, vertically centered */
-.toc-overlay {
+/* Single container, fixed position */
+.toc-container {
   position: fixed;
   right: 60px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 50;
-  pointer-events: none;
 }
 
-.toc-overlay > * {
-  pointer-events: auto;
-}
-
-/* Collapsed: symbol hints with semitransparent background */
+/* Collapsed: small hint lines */
 .toc-hints {
   padding: 10px 6px;
   display: flex;
@@ -22,11 +17,6 @@
   border-radius: 6px;
   background: color-mix(in srgb, var(--color-sidebar) 50%, transparent);
   backdrop-filter: blur(1px);
-  transition: background 0.2s;
-}
-
-.toc-overlay:hover .toc-hints {
-  background: var(--color-sidebar);
 }
 
 .toc-hint {
@@ -34,7 +24,6 @@
   border-radius: 1px;
   background: var(--color-text-secondary);
   opacity: 0.4;
-  cursor: default;
   transition: background 0.15s, opacity 0.15s;
 }
 
@@ -50,7 +39,7 @@
 .toc-hint-5 { width: 6px; }
 .toc-hint-6 { width: 4px; }
 
-/* Expanded: full panel with titles */
+/* Expanded panel */
 .toc-panel {
   background: var(--color-sidebar);
   border: 1px solid var(--color-border);

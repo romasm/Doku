@@ -342,4 +342,35 @@ router.get('/search', (req, res) => {
   }
 });
 
+// POST /api/open-folder — open a doc's parent folder in OS file explorer
+router.post('/open-folder', (req, res) => {
+  const { path: docPath } = req.body;
+  const filePath = path.join(DOCS_DIR, (docPath || '') + '.md');
+
+  if (!filePath.startsWith(DOCS_DIR)) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
+  const { exec } = require('child_process');
+  const platform = process.platform;
+  let cmd;
+
+  if (fs.existsSync(filePath)) {
+    // Open folder with the file selected
+    if (platform === 'win32') cmd = `explorer /select,"${filePath.replace(/\//g, '\\')}"`;
+    else if (platform === 'darwin') cmd = `open -R "${filePath}"`;
+    else cmd = `xdg-open "${path.dirname(filePath)}"`;
+  } else {
+    const folderToOpen = DOCS_DIR;
+    if (platform === 'win32') cmd = `explorer "${folderToOpen}"`;
+    else if (platform === 'darwin') cmd = `open "${folderToOpen}"`;
+    else cmd = `xdg-open "${folderToOpen}"`;
+  }
+
+  exec(cmd, (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ success: true });
+  });
+});
+
 module.exports = router;

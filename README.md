@@ -11,17 +11,17 @@ A personal documentation system that stores docs as plain Markdown files and pro
 - **Markdown-first** — all documents are standard `.md` files on disk, editable with any tool
 - **WYSIWYG editor** — Notion-style block editor (BlockNote) with no raw Markdown editing
 - **Hierarchical folders** — organize docs in nested folders with a collapsible sidebar tree
-- **Full-text search** — instant search across all documents with highlighted snippets
+- **Full-text search** — search bar at the top of the sidebar with highlighted snippets
 - **Auto-save** — changes save automatically (1-second debounce)
 - **Live reload** — external file changes are detected and reflected instantly in the browser
-- **Dark mode** — toggle between light and dark themes
-- **Image support** — drag and drop images into documents
-- **Frontmatter** — YAML metadata for ordering
+- **Dark mode** — toggle at the bottom of the sidebar, preference saved
+- **Image support** — drag and drop images with width and alignment preserved
+- **Resizable sidebar** — drag the edge to adjust width
+- **Width toggle** — switch between narrow and full-width document view
 - **Breadcrumb navigation** — clickable path segments to navigate parent pages
 - **Table of contents** — floating heading outline on the right, hover to expand and navigate
-- **Emoji shortcodes** — `:rocket:`, `:heart:` etc. rendered as unicode emoji
-- **Highlight syntax** — `==text==` renders with yellow background
-- **Horizontal rules** — `---` renders as a visual separator
+- **Open folder** — open the document's file location in your OS file explorer
+- **Frontmatter** — YAML metadata for ordering (hidden in editor)
 - **No database** — the filesystem is the single source of truth
 
 ## AI-Friendly

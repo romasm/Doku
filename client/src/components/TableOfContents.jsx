@@ -5,6 +5,7 @@ export default function TableOfContents({ editor }) {
   const [headings, setHeadings] = useState([]);
   const [visible, setVisible] = useState(false);
   const [activeId, setActiveId] = useState(null);
+  const hideTimer = useRef(null);
 
   const extractHeadings = useCallback(() => {
     if (!editor) return;
@@ -27,7 +28,6 @@ export default function TableOfContents({ editor }) {
   useEffect(() => {
     extractHeadings();
     if (!editor) return;
-
     const handler = () => extractHeadings();
     editor.onChange(handler);
     return () => editor.onChange(handler);
@@ -41,7 +41,6 @@ export default function TableOfContents({ editor }) {
     }
   }, []);
 
-  // Track which heading is currently in view
   useEffect(() => {
     const editorArea = document.querySelector('.editor-blocknote') || document.querySelector('.editor-area');
     if (!editorArea || headings.length === 0) return;
@@ -63,29 +62,22 @@ export default function TableOfContents({ editor }) {
     return () => editorArea.removeEventListener('scroll', onScroll);
   }, [headings]);
 
+  const show = useCallback(() => {
+    clearTimeout(hideTimer.current);
+    setVisible(true);
+  }, []);
 
-  const overlayRef = useRef(null);
-
-  useEffect(() => {
-    const el = overlayRef.current;
-    if (!el) return;
-    const onWheel = (e) => {
-      e.preventDefault();
-      const target = document.querySelector('.editor-blocknote') || document.querySelector('.editor-area');
-      if (target) target.scrollTop += e.deltaY;
-    };
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
+  const hide = useCallback(() => {
+    hideTimer.current = setTimeout(() => setVisible(false), 300);
   }, []);
 
   if (headings.length === 0) return null;
 
   return (
     <div
-      ref={overlayRef}
-      className="toc-overlay"
-      onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
+      className="toc-container"
+      onMouseEnter={show}
+      onMouseLeave={hide}
     >
       {!visible && (
         <div className="toc-hints">

@@ -73,6 +73,16 @@ export async function uploadImage(file) {
   return res.json();
 }
 
+export async function openFolder(docPath) {
+  const res = await fetch(`${BASE}/open-folder`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path: docPath }),
+  });
+  if (!res.ok) throw new Error('Failed to open folder');
+  return res.json();
+}
+
 export async function searchDocs(query) {
   const res = await fetch(`${BASE}/search?q=${encodeURIComponent(query)}`);
   if (!res.ok) throw new Error('Search failed');

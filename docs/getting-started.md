@@ -31,13 +31,17 @@ For development, you can also use `open_docs.bat` (Windows) or `./open_docs.sh` 
 
 * **Dark mode** — toggle between light and dark themes, with preference saved
 
-* **Image support** — drag and drop images into documents, stored in the assets folder
+* **Image support** — drag and drop images with width and alignment preserved
+
+* **Resizable sidebar** — drag the edge to adjust sidebar width
 
 * **Breadcrumb navigation** — clickable path segments to navigate to parent pages
 
 * **Width toggle** — switch between narrow and full-width document view
 
 * **Table of contents** — floating heading outline on the right side, hover to expand, click to navigate
+
+* **Open folder** — open the document's file location in your OS file explorer
 
 * **Frontmatter** — each file supports YAML frontmatter for metadata like ordering (hidden in the UI)
 

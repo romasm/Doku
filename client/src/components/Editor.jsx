@@ -4,7 +4,8 @@ import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
 import { useDocEditor } from '../useDocEditor';
 import { useTheme } from '../useTheme';
-import { DeleteIcon, MaximizeIcon, MinimizeIcon } from './icons';
+import { DeleteIcon, MaximizeIcon, MinimizeIcon, FolderOpenIcon } from './icons';
+import { openFolder } from '../api';
 import Breadcrumb from './Breadcrumb';
 import TableOfContents from './TableOfContents';
 import './Editor.css';
@@ -21,6 +22,9 @@ export default function Editor({ content, docPath, onSave, onDelete, isFolder, f
         <div className="editor-toolbar-actions">
           <button className="editor-width-btn" onClick={onToggleWidth} title={fullWidth ? 'Narrow view' : 'Full width'}>
             {fullWidth ? <MinimizeIcon size={16} /> : <MaximizeIcon size={16} />}
+          </button>
+          <button className="editor-action-btn" onClick={() => openFolder(docPath)} title="Open folder">
+            <FolderOpenIcon size={16} />
           </button>
           {!isFolder && (
             <button className="editor-delete-btn" onClick={onDelete} title="Delete document">
