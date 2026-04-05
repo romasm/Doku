@@ -6,13 +6,20 @@ import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
 import { fetchFolder, saveFolderIndex } from '../api';
 import { parseFrontmatter, serializeFrontmatter } from '../frontmatter';
+import { useTheme } from '../useTheme';
+import { FileTextIcon, FolderOpenIcon, MaximizeIcon, MinimizeIcon } from './icons';
+import Breadcrumb from './Breadcrumb';
+import { useSideMenuIcons } from './SideMenuIcons';
 import './FolderView.css';
 
-export default function FolderView({ folderPath, onTreeChange }) {
+export default function FolderView({ folderPath, onTreeChange, fullWidth, onToggleWidth }) {
   const [folder, setFolder] = useState(null);
   const [loading, setLoading] = useState(true);
   const saveTimerRef = useRef(null);
   const frontmatterRef = useRef({});
+  const editorContainerRef = useRef(null);
+  const theme = useTheme();
+  useSideMenuIcons(editorContainerRef);
 
   const editor = useCreateBlockNote({ initialContent: undefined });
 
@@ -57,11 +64,16 @@ export default function FolderView({ folderPath, onTreeChange }) {
   return (
     <div className="folder-view">
       <div className="editor-toolbar">
-        <span className="editor-path">{folderPath}/</span>
+        <Breadcrumb docPath={folderPath} />
+        <div className="editor-toolbar-actions">
+          <button className="editor-width-btn" onClick={onToggleWidth} title={fullWidth ? 'Narrow view' : 'Full width'}>
+            {fullWidth ? <MinimizeIcon size={16} /> : <MaximizeIcon size={16} />}
+          </button>
+        </div>
       </div>
 
-      <div className="folder-editor">
-        <BlockNoteView editor={editor} onChange={handleChange} theme="light" />
+      <div className="folder-editor" ref={editorContainerRef}>
+        <BlockNoteView editor={editor} onChange={handleChange} theme={theme} />
       </div>
 
       {folder.children && folder.children.length > 0 && (
@@ -75,7 +87,7 @@ export default function FolderView({ folderPath, onTreeChange }) {
                   className="folder-child-link"
                 >
                   <span className="folder-child-icon">
-                    {item.type === 'folder' ? '\u{1F4C1}' : '\u{1F4C4}'}
+                    {item.type === 'folder' ? <FolderOpenIcon size={18} /> : <FileTextIcon size={18} />}
                   </span>
                   <span className="folder-child-name">{item.title || item.name}</span>
                 </Link>

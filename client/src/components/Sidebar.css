@@ -36,11 +36,11 @@
   font-size: 0.85rem;
 }
 
-/* File entry */
+/* File entry — left padding matches chevron arrow width so icons align with folders */
 .tree-file {
   display: flex;
   align-items: center;
-  padding: 5px 8px;
+  padding: 5px 8px 5px 24px;
   margin: 1px 8px;
   text-decoration: none;
   color: var(--color-text);
@@ -98,11 +98,12 @@
 }
 
 .tree-arrow {
-  font-size: 0.6rem;
-  margin-right: 4px;
+  margin-right: 2px;
   transition: transform 0.15s;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
+  color: var(--color-text-secondary);
 }
 
 .tree-arrow.expanded {
@@ -111,8 +112,9 @@
 
 .tree-icon {
   margin-right: 6px;
-  font-size: 0.85rem;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 .tree-label {
@@ -126,50 +128,74 @@
 .tree-new-doc-btn {
   opacity: 0;
   background: none;
-  border: 1px solid var(--color-border);
-  border-radius: 3px;
+  border: none;
   cursor: pointer;
-  font-size: 0.75rem;
-  width: 20px;
-  height: 20px;
+  padding: 2px;
+  border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-text-secondary);
   flex-shrink: 0;
-  transition: opacity 0.1s, background 0.1s;
+  transition: opacity 0.1s, color 0.1s;
 }
 
 .tree-new-doc-btn:hover {
-  background: var(--color-border);
-  color: var(--color-text);
+  color: var(--color-primary);
 }
 
 .tree-children {
   padding-left: 12px;
 }
 
-/* New root document button at bottom */
-.sidebar-new-root {
-  padding: 8px 12px;
-  border-top: 1px solid var(--color-border);
-  flex-shrink: 0;
-}
-
+/* New document button inside tree */
 .sidebar-new-root-btn {
-  width: 100%;
+  width: 28px;
+  height: 28px;
   background: none;
   border: 1px dashed var(--color-border);
-  padding: 6px;
-  border-radius: 4px;
-  font-size: 0.8rem;
+  border-radius: 6px;
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: background 0.1s, color 0.1s;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 6px 8px 8px 24px;
 }
 
 .sidebar-new-root-btn:hover {
   background: var(--color-hover);
+  color: var(--color-text);
+  border-color: var(--color-text-secondary);
+}
+
+/* Bottom area */
+.sidebar-bottom {
+  padding: 8px 12px;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Dark mode toggle */
+.dark-mode-toggle {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 5px;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.dark-mode-toggle:hover {
   color: var(--color-text);
   border-color: var(--color-text-secondary);
 }

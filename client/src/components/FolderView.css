@@ -47,7 +47,8 @@
 
 .folder-child-icon {
   margin-right: 8px;
-  font-size: 1rem;
+  display: flex;
+  align-items: center;
 }
 
 .folder-child-name {

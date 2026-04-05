@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
+import { FileTextIcon, FolderOpenIcon, ChevronRightIcon, PlusIcon, SunIcon, MoonIcon } from './icons';
 import './Sidebar.css';
+
+const ICON_SIZE = 16;
 
 function TreeItem({ item, onNewDoc }) {
   const [expanded, setExpanded] = useState(true);
@@ -16,13 +19,13 @@ function TreeItem({ item, onNewDoc }) {
         className={`tree-file ${isActive ? 'active' : ''}`}
         title={item.title || item.name}
       >
-        <span className="tree-icon">&#128196;</span>
+        <span className="tree-icon"><FileTextIcon size={ICON_SIZE} /></span>
         <span className="tree-label">{item.title || item.name}</span>
-        <button
+        <span
           className="tree-new-doc-btn"
           title="New child document"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); onNewDoc(item.path); }}
-        >+</button>
+        ><PlusIcon size={14} /></span>
       </NavLink>
     );
   }
@@ -35,19 +38,19 @@ function TreeItem({ item, onNewDoc }) {
         <span
           className={`tree-arrow ${expanded ? 'expanded' : ''}`}
           onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
-        >&#9654;</span>
+        ><ChevronRightIcon size={14} /></span>
         <span
           className="tree-folder-link"
           onClick={() => { navigate(`/doc/${item.path}`); if (!expanded) setExpanded(true); }}
         >
-          <span className="tree-icon">&#128193;</span>
+          <span className="tree-icon"><FolderOpenIcon size={ICON_SIZE} /></span>
           <span className="tree-label">{item.title || item.name}</span>
         </span>
-        <button
+        <span
           className="tree-new-doc-btn"
           title="New child document"
           onClick={(e) => { e.stopPropagation(); onNewDoc(item.path); }}
-        >+</button>
+        ><PlusIcon size={14} /></span>
       </div>
       {expanded && item.children && (
         <div className="tree-children">
@@ -61,6 +64,29 @@ function TreeItem({ item, onNewDoc }) {
         </div>
       )}
     </div>
+  );
+}
+
+function DarkModeToggle() {
+  const [dark, setDark] = useState(() => {
+    const saved = localStorage.getItem('doku-theme');
+    if (saved) return saved === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    localStorage.setItem('doku-theme', dark ? 'dark' : 'light');
+  }, [dark]);
+
+  return (
+    <button
+      className="dark-mode-toggle"
+      onClick={() => setDark((d) => !d)}
+      title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {dark ? <SunIcon size={16} /> : <MoonIcon size={16} />}
+    </button>
   );
 }
 
@@ -102,22 +128,22 @@ export default function Sidebar({ tree, projectName, onNewDoc, onSearchSelect, s
         <SearchBar onSelect={onSearchSelect} />
       </div>
       <nav className="sidebar-tree">
-        {tree.length === 0 ? (
+        {tree.length === 0 && (
           <div className="sidebar-empty">No documents yet.</div>
-        ) : (
-          tree.map((item) => (
-            <TreeItem
-              key={item.path}
-              item={item}
-              onNewDoc={onNewDoc}
-            />
-          ))
         )}
-      </nav>
-      <div className="sidebar-new-root">
+        {tree.map((item) => (
+          <TreeItem
+            key={item.path}
+            item={item}
+            onNewDoc={onNewDoc}
+          />
+        ))}
         <button className="sidebar-new-root-btn" onClick={() => onNewDoc('')}>
-          + New Document
+          <PlusIcon size={14} />
         </button>
+      </nav>
+      <div className="sidebar-bottom">
+        <DarkModeToggle />
       </div>
       <div className="sidebar-resize-handle" onMouseDown={startResize} />
     </aside>

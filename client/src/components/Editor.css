@@ -26,18 +26,36 @@
   gap: 8px;
 }
 
+.editor-width-btn {
+  background: none;
+  color: var(--color-text-secondary);
+  border: none;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.editor-width-btn:hover {
+  color: var(--color-text);
+}
+
 .editor-delete-btn {
   background: none;
-  color: var(--color-danger);
-  border: 1px solid var(--color-danger);
-  padding: 5px 14px;
+  color: var(--color-text-secondary);
+  border: none;
+  padding: 4px;
   border-radius: 4px;
-  font-size: 0.8rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
 }
 
 .editor-delete-btn:hover {
-  background: #fef2f2;
+  color: var(--color-danger);
 }
 
 .editor-blocknote {
@@ -47,4 +65,47 @@
 
 .editor-blocknote .bn-editor {
   padding: 0;
+  background: var(--color-bg) !important;
+  color: var(--color-text) !important;
+}
+
+.editor-blocknote .bn-container {
+  background: var(--color-bg) !important;
+}
+
+/* Side menu (add block + drag handle) — keep within editor bounds */
+.editor-blocknote .bn-side-menu {
+  left: 0 !important;
+}
+
+.editor-blocknote .bn-side-menu button {
+  background: none !important;
+  border: none !important;
+  color: var(--color-text-secondary) !important;
+  transition: color 0.15s !important;
+}
+
+.editor-blocknote .bn-side-menu button:hover {
+  color: var(--color-primary) !important;
+}
+
+/* Hide BlockNote's default SVG icons, our animated icons are injected via React */
+.editor-blocknote .bn-side-menu button > svg,
+.editor-blocknote .bn-side-menu button > span.m_8d3afb97 {
+  display: none !important;
+}
+
+/* Code block styling */
+.editor-blocknote [data-content-type="codeBlock"] {
+  background: var(--color-code-bg) !important;
+}
+
+.editor-blocknote [data-content-type="codeBlock"] pre {
+  color: var(--color-code-text) !important;
+}
+
+/* Inline code */
+.editor-blocknote code {
+  background: var(--color-code-bg) !important;
+  color: var(--color-code-text) !important;
 }

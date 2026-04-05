@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { searchDocs } from '../api';
+import { SearchIcon } from './icons';
 import './SearchBar.css';
 
 export default function SearchBar({ onSelect }) {
@@ -70,10 +71,11 @@ export default function SearchBar({ onSelect }) {
 
   return (
     <div className="search-wrapper" ref={wrapperRef}>
+      <span className="search-icon"><SearchIcon size={14} /></span>
       <input
         type="text"
         className="search-input"
-        placeholder="Search documents... (Ctrl+K)"
+        placeholder="Search... (Ctrl+K)"
         value={query}
         onChange={handleChange}
         onKeyDown={handleKeyDown}

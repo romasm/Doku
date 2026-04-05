@@ -9,7 +9,7 @@ How to structure your documentation using folders, ordering, and naming conventi
 
 Documents can be organized into folders to any depth. On disk, the structure looks like:
 
-```
+```text
 docs/
 ├── getting-started.md        ← standalone document
 ├── guides.md                 ← folder index for guides/
@@ -22,14 +22,16 @@ docs/
     └── configuration.md
 ```
 
-The key rule: every folder has a **sibling `.md` file** with the same name that serves as its index page. For example, `guides/` has `guides.md` next to it.
+The key rule: every folder has a **sibling&#x20;**`.md`**&#x20;file** with the same name that serves as its index page. For example, `guides/` has `guides.md` next to it.
 
 ## Converting a Document to a Folder
 
 Click the **+** button next to any document in the sidebar. This:
 
 1. Creates a subfolder with the document's name
+
 2. The original `.md` file becomes the folder's index page
+
 3. The new child document is created inside the folder
 
 The document's position in the sidebar stays the same — ordering is preserved.

@@ -6,7 +6,7 @@ import FolderView from './components/FolderView';
 import { fetchConfig, fetchTree, fetchDoc, saveDoc, deleteDoc, createFolder } from './api';
 import './App.css';
 
-function DocPage({ onTreeChange }) {
+function DocPage({ onTreeChange, fullWidth, onToggleWidth }) {
   const params = useParams();
   const navigate = useNavigate();
   const docPath = params['*'] || '';
@@ -77,6 +77,8 @@ function DocPage({ onTreeChange }) {
         key={docPath}
         folderPath={docPath}
         onTreeChange={onTreeChange}
+        fullWidth={fullWidth}
+        onToggleWidth={onToggleWidth}
       />
     );
   }
@@ -90,6 +92,8 @@ function DocPage({ onTreeChange }) {
       onDelete={handleDelete}
       onAddChild={handleAddChild}
       isFolder={false}
+      fullWidth={fullWidth}
+      onToggleWidth={onToggleWidth}
     />
   );
 }
@@ -98,6 +102,7 @@ export default function App() {
   const [tree, setTree] = useState([]);
   const [projectName, setProjectName] = useState('Doku');
   const [sidebarWidth, setSidebarWidth] = useState(280);
+  const [fullWidth, setFullWidth] = useState(() => localStorage.getItem('doku-full-width') === 'true');
   const navigate = useNavigate();
 
   const loadTree = useCallback(() => {
@@ -160,15 +165,15 @@ export default function App() {
         onResize={setSidebarWidth}
       />
       <main className="main-content">
-        <div className="editor-area">
+        <div className={`editor-area ${fullWidth ? 'full-width' : ''}`}>
           <Routes>
             <Route
               path="/"
-              element={<DocPage onTreeChange={loadTree} />}
+              element={<DocPage onTreeChange={loadTree} fullWidth={fullWidth} onToggleWidth={() => { setFullWidth(v => { const nv = !v; localStorage.setItem('doku-full-width', nv); return nv; }); }} />}
             />
             <Route
               path="/doc/*"
-              element={<DocPage onTreeChange={loadTree} />}
+              element={<DocPage onTreeChange={loadTree} fullWidth={fullWidth} onToggleWidth={() => { setFullWidth(v => { const nv = !v; localStorage.setItem('doku-full-width', nv); return nv; }); }} />}
             />
           </Routes>
         </div>

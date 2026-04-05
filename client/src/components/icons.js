@@ -1,0 +1,12 @@
+export { FileTextIcon } from '../../../icons/icons/file-text';
+export { FolderOpenIcon } from '../../../icons/icons/folder-open';
+export { PlusIcon } from '../../../icons/icons/plus';
+export { SearchIcon } from '../../../icons/icons/search';
+export { DeleteIcon } from '../../../icons/icons/delete';
+export { ChevronRightIcon } from '../../../icons/icons/chevron-right';
+export { XIcon } from '../../../icons/icons/x';
+export { SunIcon } from '../../../icons/icons/sun';
+export { MoonIcon } from '../../../icons/icons/moon';
+export { MaximizeIcon } from '../../../icons/icons/maximize';
+export { MinimizeIcon } from '../../../icons/icons/minimize';
+export { GripVerticalIcon } from '../../../icons/icons/grip-vertical';
