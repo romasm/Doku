@@ -15,9 +15,8 @@ A personal documentation system that stores docs as plain Markdown files and pro
 - **Auto-save** — changes save automatically (1-second debounce)
 - **Dark mode** — toggle between light and dark themes
 - **Image support** — drag and drop images into documents
-- **Frontmatter** — YAML metadata for ordering and other settings (hidden in the editor)
+- **Frontmatter** — YAML metadata for ordering
 - **Breadcrumb navigation** — clickable path segments to navigate parent pages
-- **Resizable sidebar** — drag the edge to adjust sidebar width
 - **No database** — the filesystem is the single source of truth
 
 ## Quick Start
@@ -52,7 +51,7 @@ open_docs.bat                 # Windows
 
 ## Configuration
 
-Place a `config.json` inside your docs folder:
+Edit `config.json` inside your docs folder:
 
 ```json
 {
