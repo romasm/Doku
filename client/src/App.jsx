@@ -113,6 +113,7 @@ function DocPage({ onTreeChange, fullWidth, onToggleWidth }) {
       isFolder={false}
       fullWidth={fullWidth}
       onToggleWidth={onToggleWidth}
+      onTreeChange={onTreeChange}
     />
   );
 }

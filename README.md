@@ -16,12 +16,9 @@ A personal documentation system that stores docs as plain Markdown files and pro
 - **Live reload** — external file changes are detected and reflected instantly in the browser
 - **Dark mode** — toggle at the bottom of the sidebar, preference saved
 - **Image support** — drag and drop images with width and alignment preserved
-- **Resizable sidebar** — drag the edge to adjust width
 - **Width toggle** — switch between narrow and full-width document view
-- **Breadcrumb navigation** — clickable path segments to navigate parent pages
 - **Table of contents** — floating heading outline on the right, hover to expand and navigate
-- **Open folder** — open the document's file location in your OS file explorer
-- **Frontmatter** — YAML metadata for ordering (hidden in editor)
+- **Page emoji** — set a custom emoji icon per document, shown in the sidebar and at the top of the page
 - **No database** — the filesystem is the single source of truth
 
 ## AI-Friendly

@@ -1,5 +1,6 @@
 ---
 ordering: 2
+icon: 📚
 ---
 # Guides
 

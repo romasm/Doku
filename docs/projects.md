@@ -1,5 +1,6 @@
 ---
 ordering: 4
+icon: 💡
 ---
 # Projects
 

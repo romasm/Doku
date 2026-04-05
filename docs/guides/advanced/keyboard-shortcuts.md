@@ -1,5 +1,6 @@
 ---
 ordering: 1
+icon: ⌨️
 ---
 # Keyboard Shortcuts
 

@@ -10,3 +10,4 @@ export { MoonIcon } from '../../../icons/icons/moon';
 export { MaximizeIcon } from '../../../icons/icons/maximize';
 export { MinimizeIcon } from '../../../icons/icons/minimize';
 export { GripVerticalIcon } from '../../../icons/icons/grip-vertical';
+export { SmilePlusIcon } from '../../../icons/icons/smile-plus';

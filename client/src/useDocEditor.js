@@ -60,5 +60,5 @@ export function useDocEditor(content, onSave) {
     }, 1000);
   }, [editor, onSave]);
 
-  return { editor, handleChange };
+  return { editor, handleChange, frontmatterRef };
 }

@@ -9,11 +9,13 @@ import { useTheme } from '../useTheme';
 import { FileTextIcon, FolderOpenIcon, MaximizeIcon, MinimizeIcon } from './icons';
 import Breadcrumb from './Breadcrumb';
 import TableOfContents from './TableOfContents';
+import EmojiPicker from './EmojiPicker';
 import './FolderView.css';
 
 export default function FolderView({ folderPath, onTreeChange, fullWidth, onToggleWidth }) {
   const [folder, setFolder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [icon, setIcon] = useState(undefined);
   const editorContainerRef = useRef(null);
   const theme = useTheme();
 
@@ -25,7 +27,7 @@ export default function FolderView({ folderPath, onTreeChange, fullWidth, onTogg
     [folderPath, onTreeChange]
   );
 
-  const { editor, handleChange } = useDocEditor(folder?.content, handleSave);
+  const { editor, handleChange, frontmatterRef } = useDocEditor(folder?.content, handleSave);
 
   useEffect(() => {
     if (!folderPath) return;
@@ -36,13 +38,35 @@ export default function FolderView({ folderPath, onTreeChange, fullWidth, onTogg
       .finally(() => setLoading(false));
   }, [folderPath]);
 
+  // Sync icon from frontmatter after useDocEditor parses content
+  useEffect(() => {
+    if (folder?.content) {
+      const timer = setTimeout(() => setIcon(frontmatterRef.current?.icon), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [folder?.content, frontmatterRef]);
+
+  const handleEmojiChange = useCallback((emoji) => {
+    setIcon(emoji);
+    if (emoji) {
+      frontmatterRef.current.icon = emoji;
+    } else {
+      delete frontmatterRef.current.icon;
+    }
+    handleChange();
+    if (onTreeChange) setTimeout(onTreeChange, 1500);
+  }, [frontmatterRef, handleChange, onTreeChange]);
+
   if (loading) return <div className="loading">Loading...</div>;
   if (!folder) return <div className="not-found">Folder not found.</div>;
 
   return (
     <div className="folder-view">
       <div className="editor-toolbar">
-        <Breadcrumb docPath={folderPath} />
+        <div className="editor-toolbar-left">
+          <Breadcrumb docPath={folderPath} />
+          <EmojiPicker value={icon} onChange={handleEmojiChange} />
+        </div>
         <div className="editor-toolbar-actions">
           <button className="editor-width-btn" onClick={onToggleWidth} title={fullWidth ? 'Narrow view' : 'Full width'}>
             {fullWidth ? <MinimizeIcon size={16} /> : <MaximizeIcon size={16} />}
@@ -70,7 +94,8 @@ export default function FolderView({ folderPath, onTreeChange, fullWidth, onTogg
                   className="folder-child-link"
                 >
                   <span className="folder-child-icon">
-                    {item.type === 'folder' ? <FolderOpenIcon size={18} /> : <FileTextIcon size={18} />}
+                    {item.icon ? <span className="tree-emoji">{item.icon}</span> :
+                      item.type === 'folder' ? <FolderOpenIcon size={18} /> : <FileTextIcon size={18} />}
                   </span>
                   <span className="folder-child-name">{item.title || item.name}</span>
                 </Link>

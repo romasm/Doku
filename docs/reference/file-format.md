@@ -25,6 +25,7 @@ The frontmatter block is optional. If present, it must be the very first thing i
 | Field    | Type   | Description                                                  |
 | -------- | ------ | ------------------------------------------------------------ |
 | ordering | number | Controls position in the sidebar. Lower values appear first. |
+| icon     | string | An emoji displayed instead of the default file/folder icon in the sidebar. Can be set via the emoji picker in the UI or directly in the frontmatter. |
 
 Frontmatter is parsed by Doku's server and stripped before displaying in the editor. It is preserved transparently when saving from the UI.
 

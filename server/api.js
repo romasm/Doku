@@ -78,9 +78,9 @@ function getFileMeta(filePath) {
     const content = fs.readFileSync(filePath, 'utf-8');
     const { frontmatter, body } = parseFrontmatter(content);
     const title = extractTitle(body);
-    return { ordering: frontmatter.ordering, title };
+    return { ordering: frontmatter.ordering, title, icon: frontmatter.icon };
   } catch {
-    return { ordering: undefined, title: null };
+    return { ordering: undefined, title: null, icon: undefined };
   }
 }
 
@@ -113,6 +113,7 @@ function buildTree(dirPath, basePath = '') {
       items.push({
         name: entry.name,
         title: meta.title || formatName(entry.name),
+        icon: meta.icon,
         path: relativePath,
         type: 'folder',
         ordering: meta.ordering,
@@ -128,6 +129,7 @@ function buildTree(dirPath, basePath = '') {
       items.push({
         name: nameWithoutExt,
         title: meta.title || formatName(nameWithoutExt),
+        icon: meta.icon,
         path: relativePath.replace(/\.md$/, ''),
         type: 'file',
         ordering: meta.ordering,

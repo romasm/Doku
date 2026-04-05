@@ -9,6 +9,7 @@ Every `.md` file in the docs folder must start with YAML frontmatter:
 ```markdown
 ---
 ordering: 1
+icon: 🚀
 ---
 # Document Title
 
@@ -16,6 +17,7 @@ Content here...
 ```
 
 - The `ordering` field is a number that controls sidebar position (lower = higher). It is required for all files that should appear in a specific order.
+- The `icon` field is an optional emoji string (e.g. `🚀`). When set, it replaces the default file/folder icon in the sidebar. Users can also set this via the emoji picker in the UI.
 - The first `# heading` after frontmatter becomes the display name in the sidebar. Always include one.
 - If a file has no frontmatter, add it. Never remove existing frontmatter.
 

@@ -1,5 +1,6 @@
 ---
 ordering: 4
+icon: 🏗️
 ---
 # Architecture
 
@@ -31,6 +32,7 @@ Doku/
 │   │       ├── SearchBar.jsx    # Search input + results dropdown
 │   │       ├── Breadcrumb.jsx       # Clickable path navigation
 │   │       ├── TableOfContents.jsx  # Floating heading outline overlay
+│   │       ├── EmojiPicker.jsx      # Page emoji picker (emoji-mart)
 │   │       └── icons.js             # Re-exports from icons submodule
 │   └── index.html
 ├── icons/                   # Animated icons submodule (pqoqubbw/icons)
@@ -54,6 +56,8 @@ Doku/
 
 * **Icons:** Animated SVG icons from pqoqubbw/icons (git submodule)
 
+* **Emoji picker:** emoji-mart (@emoji-mart/react)
+
 * **Routing:** React Router v7
 
 * **Storage:** Plain `.md` files on the filesystem
@@ -71,6 +75,7 @@ Doku/
 5. The API writes the file to disk
 
 6. Image drops are handled by BlockNote's upload callback, which POSTs to `/api/upload` and saves to `docs/assets/`
+
 7. A **file watcher** monitors the docs folder for external changes and pushes notifications to the browser via Server-Sent Events (SSE), triggering automatic sidebar and editor refresh
 
 ## No Database

@@ -19,7 +19,7 @@ function TreeItem({ item, onNewDoc }) {
         className={`tree-file ${isActive ? 'active' : ''}`}
         title={item.title || item.name}
       >
-        <span className="tree-icon"><FileTextIcon size={ICON_SIZE} /></span>
+        <span className="tree-icon">{item.icon ? <span className="tree-emoji">{item.icon}</span> : <FileTextIcon size={ICON_SIZE} />}</span>
         <span className="tree-label">{item.title || item.name}</span>
         <span
           className="tree-new-doc-btn"
@@ -43,7 +43,7 @@ function TreeItem({ item, onNewDoc }) {
           className="tree-folder-link"
           onClick={() => { navigate(`/doc/${item.path}`); if (!expanded) setExpanded(true); }}
         >
-          <span className="tree-icon"><FolderOpenIcon size={ICON_SIZE} /></span>
+          <span className="tree-icon">{item.icon ? <span className="tree-emoji">{item.icon}</span> : <FolderOpenIcon size={ICON_SIZE} />}</span>
           <span className="tree-label">{item.title || item.name}</span>
         </span>
         <span

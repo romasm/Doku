@@ -5,8 +5,8 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
 ## Tech Stack
 
 - **Backend:** Node.js, Express 5
-- **Frontend:** React 19, Vite 8, React Router v7, BlockNote editor, Mantine
-- **Icons:** Animated icons from `pqoqubbw/icons` submodule (via `icons/`)
+- **Frontend:** React 19, Vite 8, React Router v7, BlockNote editor, Mantine, emoji-mart
+- **Icons:** Animated icons from `pqoqubbw/icons` submodule (via `icons/`), SmilePlusIcon for emoji picker placeholder
 - **Storage:** Plain `.md` files on the filesystem, path passed as CLI argument (defaults to `./docs`)
 - **No auth** — designed for personal/local use
 
@@ -22,7 +22,7 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
   - `watcher.js` — file watcher + SSE for live reload
 - `client/` — React frontend (Vite)
   - `src/App.jsx` — main app with routing
-  - `src/components/` — Sidebar, Editor, FolderView, SearchBar, Breadcrumb, TableOfContents
+  - `src/components/` — Sidebar, Editor, FolderView, SearchBar, Breadcrumb, TableOfContents, EmojiPicker
   - `src/frontmatter.js` — client-side frontmatter parser
   - `src/imageMarkdown.js` — markdown extensions (image properties, horizontal rules, emoji shortcodes, highlight, underline, HTML symbols, comments, block/inline colors and alignment)
   - `src/useDocEditor.js` — shared editor hook (BlockNote init, auto-save, content loading)
@@ -49,6 +49,7 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
 - Any document can be converted into a folder by clicking the **+** button — this creates a subfolder with the doc's name, and the original `.md` file becomes the folder's index.
 - The tree hides `.md` files that have a matching sibling folder (they are shown as the folder instead).
 - Each `.md` file can have YAML frontmatter with an `ordering` field (hidden in the UI). Items with ordering come first (ascending), then items without (alphabetical). Files and folders intermix freely.
+- Each `.md` file can optionally have an `icon` field in frontmatter (an emoji string). When set, the emoji replaces the default file/folder icon in the sidebar. Users can set it via the emoji picker in the toolbar (powered by emoji-mart).
 - Display names come from the first `# heading` in the file. Fallback: title-cased filename.
 - When the last child is deleted from a folder, the empty folder is automatically removed (reverting to a plain doc).
 - Images are stored in `docs/assets/` and embedded via drag-and-drop or BlockNote's image block.
