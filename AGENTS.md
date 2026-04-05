@@ -72,7 +72,7 @@ When creating a new folder:
 
 These are excluded from the document tree and should not be treated as docs:
 
-- `config.json` — project configuration (contains `projectName`)
+- `config.json` — project configuration (contains `projectName`, `port`)
 - `assets/` — uploaded images, managed automatically by the app
 
 Do not create, modify, or delete these unless specifically instructed.

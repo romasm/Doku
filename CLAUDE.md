@@ -12,6 +12,7 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
 
 ## Project Structure
 
+- `bin/` — CLI entry point (`doku init`, `doku serve`)
 - `server/` — Express API (file CRUD, tree, search, image upload)
   - `index.js` — server entry point
   - `api.js` — REST API routes
@@ -25,15 +26,15 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
   - `src/useTheme.js` — dark/light mode hook
 - `icons/` — animated icons submodule (pqoqubbw/icons)
 - `docs/` — default documentation content folder
-  - `config.json` — project config (projectName)
+  - `config.json` — project config (projectName, port)
   - `assets/` — uploaded images
-- `open_docs.bat` — builds frontend + launches server
+- `open_docs.bat` / `open_docs.sh` — builds frontend + launches server
 
 ## Configuration
 
 - **Docs path:** CLI argument — `node server/index.js ./my-docs` (default: `./docs`)
-- **config.json:** lives inside the docs folder, contains `{ "projectName": "My Project" }`
-- **Port:** 4782 by default, override with `PORT` env var
+- **config.json:** lives inside the docs folder, contains `{ "projectName": "My Project", "port": 4782 }`
+- **Port:** 4782 by default, configurable via `port` in config.json or `PORT` env var
 
 ## Docs Rules
 

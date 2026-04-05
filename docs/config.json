@@ -1,3 +1,4 @@
 {
-  "projectName": "Doku"
+  "projectName": "Doku",
+  "port": 4782
 }

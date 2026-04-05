@@ -24,23 +24,27 @@ Place a `config.json` file inside your docs folder to configure project-level se
 
 ```json
 {
-  "projectName": "My Knowledge Base"
+  "projectName": "My Knowledge Base",
+  "port": 4782
 }
 ```
 
 ### projectName
 
-* **Type:** string
+- **Type:** string
+- **Default:** `"Doku"`
+- **Description:** The name displayed at the top of the sidebar. Use this to label different documentation projects.
 
-* **Default:** `"Doku"`
+### port
 
-* **Description:** The name displayed at the top of the sidebar. Use this to label different documentation projects.
+- **Type:** number
+- **Default:** `4782`
+- **Description:** The port the backend server listens on. Can also be overridden with the `PORT` environment variable (env var takes highest priority).
 
 ## Ports
 
-* **Backend (Express):** port 4782 by default. Override with the `PORT` environment variable.
-
-* **Dev frontend (Vite):** port 5173. The Vite dev server proxies `/api` requests to the backend.
+- **Backend (Express):** port 4782 by default. Set via `port` in config.json or the `PORT` environment variable.
+- **Dev frontend (Vite):** port 5173. The Vite dev server proxies `/api` requests to the backend.
 
 ## Production vs Development
 

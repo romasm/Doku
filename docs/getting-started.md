@@ -7,10 +7,12 @@ Welcome to **Doku** — a personal documentation system that stores your docs as
 
 ## Quick Start
 
-1. Open a terminal in the Doku project folder
-2. Run `open_docs.bat` (or `node server/index.js` + `npx vite` for development)
+1. Initialize a docs folder: `npx dokumd init ./my-docs`
+2. Start the server: `npx dokumd ./my-docs`
 3. Open `http://localhost:4782` in your browser
 4. Start creating and organizing your documentation
+
+For development, you can also use `open_docs.bat` (Windows) or `./open_docs.sh` (macOS/Linux).
 
 ## Key Features
 

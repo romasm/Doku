@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="doku.png" alt="Doku" width="128" />
+</p>
+
 # Doku
 
 A personal documentation system that stores docs as plain Markdown files and provides a web UI with hierarchical navigation, WYSIWYG editing, and full-text search.
@@ -19,10 +23,22 @@ A personal documentation system that stores docs as plain Markdown files and pro
 ## Quick Start
 
 ```bash
-# Install dependencies
-npm install
+# Initialize a new docs folder
+npx dokumd init ./my-docs
 
-# Initialize the icons submodule
+# Start the server
+npx dokumd ./my-docs
+```
+
+Open `http://localhost:4782` in your browser.
+
+## Development Setup
+
+```bash
+# Clone the repo
+git clone https://github.com/romasm/Doku.git
+cd Doku
+npm install
 git submodule update --init
 
 # Start in development mode (two terminals)
@@ -30,23 +46,9 @@ node server/index.js          # Backend on port 4782
 npx vite                      # Frontend on port 5173 with hot reload
 
 # Or build and run in production
-open_docs.bat                     # Windows: builds, starts server, opens browser
-./open_docs.sh                    # macOS/Linux: same thing
+open_docs.bat                 # Windows
+./open_docs.sh                # macOS/Linux
 ```
-
-Open `http://localhost:4782` (production) or `http://localhost:5173` (development).
-
-## Custom Docs Folder
-
-Pass a path as a CLI argument to serve docs from a different location:
-
-```bash
-node server/index.js ./my-docs
-open_docs.bat C:/Users/me/notes       # Windows
-./open_docs.sh ~/notes                # macOS/Linux
-```
-
-Defaults to `./docs` if omitted.
 
 ## Configuration
 
@@ -54,13 +56,15 @@ Place a `config.json` inside your docs folder:
 
 ```json
 {
-  "projectName": "My Knowledge Base"
+  "projectName": "My Knowledge Base",
+  "port": 4782
 }
 ```
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | projectName | string | "Doku" | Name displayed at the top of the sidebar |
+| port | number | 4782 | Port the backend server listens on (also overridable via `PORT` env var) |
 
 ## Folder Convention
 

@@ -1,10 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const config = require('./config');
 const api = require('./api');
 
 const app = express();
-const PORT = process.env.PORT || 4782;
+const PORT = config.port;
 
 app.use(cors());
 app.use(express.json());
