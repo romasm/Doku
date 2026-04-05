@@ -138,7 +138,7 @@ function replaceUnicodeWithShortcodes(text) {
 
 // ── Horizontal rule marker ──────────────────────────────────────────────────
 
-const HR_PLACEHOLDER = '\u2500\u2500\u2500'; // ───
+const HR_PLACEHOLDER = '\uFFF0HR\uFFF0';
 
 // ── Highlight ==text== ──────────────────────────────────────────────────────
 
@@ -468,6 +468,17 @@ export function restoreBlockProps(blocks, imageProps, blockPropsMap) {
     });
   }
   const cleaned = toRemove.size > 0 ? removeMarked(blocks) : blocks;
+
+  // Convert HR placeholder paragraphs into divider blocks
+  for (let i = 0; i < cleaned.length; i++) {
+    const block = cleaned[i];
+    if (block.type === 'paragraph' && block.content && Array.isArray(block.content)) {
+      const text = block.content.map(c => c.text || '').join('').trim();
+      if (text === HR_PLACEHOLDER) {
+        cleaned[i] = { id: block.id, type: 'divider', props: {}, content: undefined, children: [] };
+      }
+    }
+  }
 
   // Restore image props and inline markers
   function walk(blockList) {

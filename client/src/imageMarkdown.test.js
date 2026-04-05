@@ -3,7 +3,7 @@ import { preprocessMarkdown, restoreBlockProps } from './imageMarkdown';
 
 // ── Marker constants (must match imageMarkdown.js internals) ────────────────
 
-const HR_PLACEHOLDER = '\u2500\u2500\u2500';
+const HR_PLACEHOLDER = '\uFFF0HR\uFFF0';
 const HIGHLIGHT_OPEN = '\uFFF0HL\uFFF0';
 const HIGHLIGHT_CLOSE = '\uFFF0/HL\uFFF0';
 const UNDERLINE_OPEN = '\uFFF0UL\uFFF0';

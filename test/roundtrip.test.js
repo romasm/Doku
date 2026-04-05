@@ -6,7 +6,7 @@ import fs from 'fs';
 const PORT = 14782; // Use non-standard port to avoid conflicts
 const BASE = `http://localhost:${PORT}/api`;
 const DOCS_DIR = path.join(import.meta.dirname, '..', 'docs');
-const TEST_DOC = '_roundtrip-test';
+const TEST_DOC = `_roundtrip-test-${Date.now()}`;
 const TEST_FILE = path.join(DOCS_DIR, `${TEST_DOC}.md`);
 
 let server;
@@ -51,11 +51,13 @@ async function putDoc(docPath, content) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ content }),
   });
+  if (!res.ok) throw new Error(`PUT failed: ${res.status} ${await res.text()}`);
   return res.json();
 }
 
 async function getDoc(docPath) {
   const res = await fetch(`${BASE}/doc/${docPath}`);
+  if (!res.ok) throw new Error(`GET failed: ${res.status} ${await res.text()}`);
   return res.json();
 }
 

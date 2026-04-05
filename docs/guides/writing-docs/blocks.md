@@ -56,7 +56,7 @@ Supported languages include `javascript`, `python`, `html`, `css`, `json`, `bash
 
 Place `---` on its own line to create a visual separator.
 
----
+***
 
 ```text
 Some content above.
