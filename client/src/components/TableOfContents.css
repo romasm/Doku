@@ -1,0 +1,108 @@
+/* The overlay lives on the right edge, vertically centered */
+.toc-overlay {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Collapsed: symbol hints */
+.toc-hints {
+  background: var(--color-sidebar);
+  border: 1px solid var(--color-border);
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.06);
+}
+
+.toc-hint {
+  font-family: monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 4px 2px;
+  color: var(--color-text-secondary);
+  opacity: 0.5;
+  cursor: default;
+  transition: color 0.15s, opacity 0.15s;
+}
+
+.toc-hint.active {
+  color: var(--color-primary);
+  opacity: 1;
+}
+
+/* Expanded: full panel with titles */
+.toc-panel {
+  background: var(--color-sidebar);
+  border: 1px solid var(--color-border);
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  padding: 12px 0;
+  min-width: 200px;
+  max-width: 280px;
+  max-height: 70vh;
+  overflow-y: auto;
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
+}
+
+.toc-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  padding: 0 14px 8px;
+}
+
+.toc-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.toc-item {
+  background: none;
+  border: none;
+  border-left: 2px solid transparent;
+  text-align: left;
+  padding: 5px 14px;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: color 0.1s, border-color 0.1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toc-item:hover {
+  color: var(--color-text);
+}
+
+.toc-item.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+}
+
+.toc-level-1 {
+  padding-left: 14px;
+  font-weight: 500;
+}
+
+.toc-level-2 {
+  padding-left: 26px;
+}
+
+.toc-level-3 {
+  padding-left: 38px;
+  font-size: 0.75rem;
+}

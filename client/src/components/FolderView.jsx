@@ -8,6 +8,7 @@ import { useDocEditor } from '../useDocEditor';
 import { useTheme } from '../useTheme';
 import { FileTextIcon, FolderOpenIcon, MaximizeIcon, MinimizeIcon } from './icons';
 import Breadcrumb from './Breadcrumb';
+import TableOfContents from './TableOfContents';
 import './FolderView.css';
 
 export default function FolderView({ folderPath, onTreeChange, fullWidth, onToggleWidth }) {
@@ -52,6 +53,8 @@ export default function FolderView({ folderPath, onTreeChange, fullWidth, onTogg
       <div className="folder-editor" ref={editorContainerRef}>
         <BlockNoteView editor={editor} onChange={handleChange} theme={theme} />
       </div>
+
+      <TableOfContents editor={editor} />
 
       {folder.children && folder.children.length > 0 && (
         <div className="folder-children">

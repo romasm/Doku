@@ -6,6 +6,7 @@ import { useDocEditor } from '../useDocEditor';
 import { useTheme } from '../useTheme';
 import { DeleteIcon, MaximizeIcon, MinimizeIcon } from './icons';
 import Breadcrumb from './Breadcrumb';
+import TableOfContents from './TableOfContents';
 import './Editor.css';
 
 export default function Editor({ content, docPath, onSave, onDelete, isFolder, fullWidth, onToggleWidth }) {
@@ -31,6 +32,7 @@ export default function Editor({ content, docPath, onSave, onDelete, isFolder, f
       <div className="editor-blocknote" ref={editorContainerRef}>
         <BlockNoteView editor={editor} onChange={handleChange} theme={theme} />
       </div>
+      <TableOfContents editor={editor} />
     </div>
   );
 }
