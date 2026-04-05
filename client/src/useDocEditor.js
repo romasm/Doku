@@ -1,12 +1,13 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { useCreateBlockNote } from '@blocknote/react';
 import { parseFrontmatter, serializeFrontmatter } from './frontmatter';
-import { blocksToMarkdown, preprocessMarkdown, restoreImageWidths } from './imageMarkdown';
+import { blocksToMarkdown, preprocessMarkdown, restoreBlockProps } from './imageMarkdown';
 import { uploadImage } from './api';
 
 export function useDocEditor(content, onSave) {
   const saveTimerRef = useRef(null);
   const frontmatterRef = useRef({});
+  const commentsRef = useRef([]);
 
   const editor = useCreateBlockNote({
     initialContent: undefined,
@@ -23,10 +24,11 @@ export function useDocEditor(content, onSave) {
       frontmatterRef.current = frontmatter;
       (async () => {
         try {
-          const { processed, imageProps } = preprocessMarkdown(body);
+          const { processed, imageProps, comments, blockPropsMap } = preprocessMarkdown(body);
+          commentsRef.current = comments;
           const blocks = await editor.tryParseMarkdownToBlocks(processed);
-          restoreImageWidths(blocks, imageProps);
-          editor.replaceBlocks(editor.document, blocks);
+          const cleaned = restoreBlockProps(blocks, imageProps, blockPropsMap);
+          editor.replaceBlocks(editor.document, cleaned);
         } catch {
           editor.replaceBlocks(editor.document, [
             { type: 'paragraph', content: [{ type: 'text', text: body }] },
@@ -45,7 +47,11 @@ export function useDocEditor(content, onSave) {
     clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(async () => {
       try {
-        const md = await blocksToMarkdown(editor);
+        let md = await blocksToMarkdown(editor);
+        // Re-append markdown comments at the end
+        if (commentsRef.current.length > 0) {
+          md = md.trimEnd() + '\n\n' + commentsRef.current.join('\n') + '\n';
+        }
         const full = serializeFrontmatter(frontmatterRef.current, md);
         await onSave(full);
       } catch (err) {

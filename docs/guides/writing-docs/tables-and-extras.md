@@ -3,7 +3,7 @@ ordering: 5
 ---
 # Tables and Extras
 
-Tables and emoji shortcodes.
+Tables, emoji shortcodes, HTML symbols, and comments.
 
 ## Tables
 
@@ -29,10 +29,10 @@ The header row and separator row (`| --- |`) are required. You can add or remove
 
 Type emoji shortcodes surrounded by colons. They render as unicode emoji in the editor and save back as shortcodes in the file.
 
-:rocket: :fire: :star: :heart: :thumbsup: :tada: :idea: :warning:
+:rocket: :fire: :star: :heart: :thumbsup: :tada: :bulb: :warning:
 
 ```text
-:rocket: :fire: :star: :heart: :thumbsup: :tada: :idea: :warning:
+:rocket: :fire: :star: :heart: :thumbsup: :tada: :bulb: :warning:
 ```
 
 ### Common Shortcodes
@@ -43,9 +43,49 @@ Type emoji shortcodes surrounded by colons. They render as unicode emoji in the 
 | `:thumbsup:`      | :thumbsup:    | `:thumbsdown:`      | :thumbsdown:    |
 | `:fire:`      | :fire:    | `:star:`       | :star:     |
 | `:rocket:`      | :rocket:    | `:tada:`      | :tada:    |
-| `:warning:`      | :warning:    | `:idea:`      | :idea:    |
+| `:warning:`      | :warning:    | `:bulb:`      | :bulb:    |
 | `:white_check_mark:`       | :white_check_mark:     | `:x:`       | :x:     |
 | `:bug:`      | :bug:    | `:wrench:`      | :wrench:    |
 | `:memo:`      | :memo:    | `:zap:`       | :zap:     |
 | `:eyes:`      | :eyes:    | `:thinking:`      | :thinking:    |
 | `:coffee:`       | :coffee:     | `:sparkles:`       | :sparkles:     |
+
+## HTML Symbols
+
+Use HTML entities for special characters. They are converted to unicode automatically.
+
+```text
+&copy; &reg; &trade; &euro; &pound;
+&rarr; &larr; &uarr; &darr;
+&infin; &ne; &le; &ge;
+&alpha; &beta; &pi; &omega;
+```
+
+Numeric entities also work: `&#169;` for &copy; and `&#x2764;` for &#x2764;.
+
+## Comments
+
+Hide text from the editor using the markdown comment syntax. Comments are invisible in the UI but preserved in the file.
+
+```text
+[This comment is hidden]: #
+[TODO: review later]: #
+```
+
+This is useful for leaving notes to yourself or other editors that shouldn't appear in the rendered document.
+
+## Admonitions
+
+Use emoji at the start of a blockquote for callout-style notes.
+
+> :warning: **Warning:** Be careful with this operation.
+
+> :bulb: **Tip:** This is a helpful suggestion.
+
+> :memo: **Note:** Additional context goes here.
+
+```text
+> :warning: **Warning:** Be careful with this operation.
+
+> :bulb: **Tip:** This is a helpful suggestion.
+```

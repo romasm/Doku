@@ -6,6 +6,9 @@
 // - Horizontal rules (--- / *** / ___)
 // - Emoji shortcodes (:name:)
 // - Highlight (==text==)
+// - Underline (<ins>text</ins>)
+// - HTML entity symbols (&copy; etc.)
+// - Markdown comments ([text]: #)
 
 // ── Emoji shortcode <-> unicode mapping ─────────────────────────────────────
 
@@ -138,6 +141,79 @@ const HR_PLACEHOLDER = '\u2500\u2500\u2500'; // ───
 const HIGHLIGHT_OPEN = '\uFFF0HL\uFFF0';
 const HIGHLIGHT_CLOSE = '\uFFF0/HL\uFFF0';
 
+// ── Underline <ins>text</ins> ───────────────────────────────────────────────
+
+const UNDERLINE_OPEN = '\uFFF0UL\uFFF0';
+const UNDERLINE_CLOSE = '\uFFF0/UL\uFFF0';
+
+// ── Inline text color ───────────────────────────────────────────────────────
+// Marker format: \uFFF0TC:colorname\uFFF0text\uFFF0/TC\uFFF0
+
+function makeColorOpen(color) { return `\uFFF0TC:${color}\uFFF0`; }
+const COLOR_CLOSE = '\uFFF0/TC\uFFF0';
+const COLOR_OPEN_RE = /\uFFF0TC:([a-zA-Z]+)\uFFF0/;
+
+// ── Block-level metadata (textColor, backgroundColor, textAlignment) ────────
+// Stored as HTML comments: <!--blockProps:{"textColor":"red"}-->
+
+const BLOCK_PROPS_RE = /^<!--blockProps:(.*?)-->\s*$/;
+const BLOCK_PROPS_PREFIX = '<!--blockProps:';
+const BLOCK_PROPS_SUFFIX = '-->';
+
+// ── HTML entity symbols ─────────────────────────────────────────────────────
+
+const HTML_ENTITIES = {
+  '&copy;': '\u00A9', '&reg;': '\u00AE', '&trade;': '\u2122',
+  '&euro;': '\u20AC', '&pound;': '\u00A3', '&yen;': '\u00A5',
+  '&cent;': '\u00A2', '&sect;': '\u00A7', '&para;': '\u00B6',
+  '&deg;': '\u00B0', '&plusmn;': '\u00B1', '&micro;': '\u00B5',
+  '&times;': '\u00D7', '&divide;': '\u00F7',
+  '&frac12;': '\u00BD', '&frac14;': '\u00BC', '&frac34;': '\u00BE',
+  '&larr;': '\u2190', '&uarr;': '\u2191', '&rarr;': '\u2192', '&darr;': '\u2193',
+  '&harr;': '\u2194', '&lArr;': '\u21D0', '&rArr;': '\u21D2', '&hArr;': '\u21D4',
+  '&bull;': '\u2022', '&hellip;': '\u2026',
+  '&ndash;': '\u2013', '&mdash;': '\u2014',
+  '&lsquo;': '\u2018', '&rsquo;': '\u2019',
+  '&ldquo;': '\u201C', '&rdquo;': '\u201D',
+  '&dagger;': '\u2020', '&Dagger;': '\u2021',
+  '&infin;': '\u221E', '&permil;': '\u2030',
+  '&le;': '\u2264', '&ge;': '\u2265', '&ne;': '\u2260',
+  '&asymp;': '\u2248', '&sum;': '\u2211', '&prod;': '\u220F',
+  '&radic;': '\u221A', '&part;': '\u2202', '&int;': '\u222B',
+  '&forall;': '\u2200', '&exist;': '\u2203',
+  '&isin;': '\u2208', '&notin;': '\u2209',
+  '&sub;': '\u2282', '&sup;': '\u2283',
+  '&and;': '\u2227', '&or;': '\u2228',
+  '&not;': '\u00AC', '&there4;': '\u2234',
+  '&alpha;': '\u03B1', '&beta;': '\u03B2', '&gamma;': '\u03B3',
+  '&delta;': '\u03B4', '&epsilon;': '\u03B5', '&pi;': '\u03C0',
+  '&sigma;': '\u03C3', '&omega;': '\u03C9',
+  '&laquo;': '\u00AB', '&raquo;': '\u00BB',
+  '&nbsp;': '\u00A0', '&amp;': '&',
+};
+
+// Build regex for all HTML entities
+const HTML_ENTITY_RE = new RegExp(
+  Object.keys(HTML_ENTITIES).map(e => e.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'),
+  'g'
+);
+
+// Also handle numeric entities: &#123; and &#x1F4A1;
+function replaceHtmlEntities(text) {
+  let result = text.replace(HTML_ENTITY_RE, (match) => HTML_ENTITIES[match] || match);
+  // &#decimal;
+  result = result.replace(/&#(\d+);/g, (_, code) => {
+    const n = parseInt(code, 10);
+    return n > 0 && n <= 0x10FFFF ? String.fromCodePoint(n) : _;
+  });
+  // &#xHex;
+  result = result.replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => {
+    const n = parseInt(hex, 16);
+    return n > 0 && n <= 0x10FFFF ? String.fromCodePoint(n) : _;
+  });
+  return result;
+}
+
 // ── Export: blocks → markdown ───────────────────────────────────────────────
 
 export async function blocksToMarkdown(editor) {
@@ -166,8 +242,12 @@ export async function blocksToMarkdown(editor) {
   }
   collectProps(cloned);
 
-  // Inject highlight markers into blocks that have yellow backgroundColor
-  injectHighlightMarkers(cloned);
+  // Collect block-level metadata (textColor, backgroundColor, textAlignment)
+  // before export since blocksToMarkdownLossy strips them
+  const blockMeta = collectBlockMeta(cloned);
+
+  // Inject inline style markers (highlight, underline, textColor)
+  injectInlineMarkers(cloned);
 
   let md = await editor.blocksToMarkdownLossy(cloned);
 
@@ -178,6 +258,18 @@ export async function blocksToMarkdown(editor) {
   md = md.replace(
     new RegExp(`${HIGHLIGHT_OPEN}(.*?)${HIGHLIGHT_CLOSE}`, 'g'),
     '==$1=='
+  );
+
+  // Restore underline markers to <ins>text</ins>
+  md = md.replace(
+    new RegExp(`${UNDERLINE_OPEN}(.*?)${UNDERLINE_CLOSE}`, 'g'),
+    '<ins>$1</ins>'
+  );
+
+  // Restore inline textColor markers to <!--tc:color-->text<!--/tc-->
+  md = md.replace(
+    /\uFFF0TC:([a-zA-Z]+)\uFFF0(.*?)\uFFF0\/TC\uFFF0/g,
+    '<!--tc:$1-->$2<!--/tc-->'
   );
 
   // Restore emoji unicode → shortcodes
@@ -201,6 +293,10 @@ export async function blocksToMarkdown(editor) {
     return img;
   });
 
+  // Inject block-level metadata as HTML comments before each styled block.
+  // We match blocks by their text content (first non-empty line).
+  md = injectBlockMetaComments(md, blockMeta);
+
   return md;
 }
 
@@ -209,14 +305,46 @@ export async function blocksToMarkdown(editor) {
 export function preprocessMarkdown(body) {
   const imageProps = {};
 
+  // Strip markdown comments ([text]: #) — store them so we can restore on save
+  const comments = [];
+  let processed = body.replace(/^\[([^\]]*)\]:\s*#\s*$/gm, (match, text) => {
+    comments.push(match);
+    return '';
+  });
+
+  // Extract <!--blockProps:{...}--> comments and replace with marker paragraphs
+  // that will survive BlockNote's markdown parser
+  const BLOCK_META_MARKER = '\uFFF0BP\uFFF0';
+  const blockPropsMap = [];
+  processed = processed.replace(/^<!--blockProps:(.*?)-->\s*$/gm, (match, json) => {
+    try {
+      const idx = blockPropsMap.length;
+      blockPropsMap.push(JSON.parse(json));
+      return `${BLOCK_META_MARKER}${idx}\n`;
+    } catch {
+      return '';
+    }
+  });
+
+  // Inline text color: <!--tc:color-->text<!--/tc--> → marker tokens
+  processed = processed.replace(/<!--tc:([a-zA-Z]+)-->(.*?)<!--\/tc-->/g, (_, color, text) => {
+    return `${makeColorOpen(color)}${text}${COLOR_CLOSE}`;
+  });
+
   // Emoji shortcodes → unicode (before any other processing)
-  let processed = replaceEmojiShortcodes(body);
+  processed = replaceEmojiShortcodes(processed);
+
+  // HTML entities → unicode
+  processed = replaceHtmlEntities(processed);
 
   // Horizontal rules: --- or *** or ___ on their own line → placeholder paragraph
   processed = processed.replace(/^[ \t]*([-*_])\1{2,}[ \t]*$/gm, HR_PLACEHOLDER);
 
   // Highlight: ==text== → marker tokens (before BlockNote strips them)
   processed = processed.replace(/==(.*?)==/g, `${HIGHLIGHT_OPEN}$1${HIGHLIGHT_CLOSE}`);
+
+  // Underline: <ins>text</ins> → marker tokens
+  processed = processed.replace(/<ins>(.*?)<\/ins>/gi, `${UNDERLINE_OPEN}$1${UNDERLINE_CLOSE}`);
 
   // Handle <div align="..."><img .../></div> patterns
   processed = processed.replace(
@@ -256,92 +384,262 @@ export function preprocessMarkdown(body) {
     }
   );
 
-  return { processed, imageProps };
+  return { processed, imageProps, comments, blockPropsMap };
 }
 
 // ── Post-parse: restore properties on blocks ────────────────────────────────
 
-export function restoreImageWidths(blocks, imageProps) {
-  for (const block of blocks) {
-    if (block.type === 'image' && block.props?.url && imageProps[block.props.url]) {
-      const props = imageProps[block.props.url];
-      if (props.previewWidth) block.props.previewWidth = props.previewWidth;
-      if (props.textAlignment) block.props.textAlignment = props.textAlignment;
-    }
+export function restoreBlockProps(blocks, imageProps, blockPropsMap) {
+  const BLOCK_META_MARKER = '\uFFF0BP\uFFF0';
+  const toRemove = new Set();
 
-    // Restore highlight markers → backgroundColor on inline content
-    if (block.content && Array.isArray(block.content)) {
-      block.content = restoreHighlights(block.content);
-    }
+  // Find marker paragraphs (\uFFF0BP\uFFF0N), apply meta to the next block, mark for removal
+  function applyBlockMeta(blockList) {
+    for (let i = 0; i < blockList.length; i++) {
+      const block = blockList[i];
 
-    if (block.children) {
-      restoreImageWidths(block.children, imageProps);
+      if (block.type === 'paragraph' && block.content && Array.isArray(block.content)) {
+        const text = block.content.map(c => c.text || '').join('').trim();
+        const match = text.match(new RegExp(`^${BLOCK_META_MARKER.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}(\\d+)$`));
+        if (match && blockPropsMap) {
+          const idx = parseInt(match[1], 10);
+          const meta = blockPropsMap[idx];
+          if (meta && i + 1 < blockList.length) {
+            const nextBlock = blockList[i + 1];
+            if (nextBlock.props) {
+              if (meta.textColor) nextBlock.props.textColor = meta.textColor;
+              if (meta.backgroundColor) nextBlock.props.backgroundColor = meta.backgroundColor;
+              if (meta.textAlignment) nextBlock.props.textAlignment = meta.textAlignment;
+            }
+          }
+          toRemove.add(block.id);
+          continue;
+        }
+      }
+
+      if (block.children) applyBlockMeta(block.children);
     }
   }
-  return blocks;
+  if (blockPropsMap && blockPropsMap.length > 0) {
+    applyBlockMeta(blocks);
+  }
+
+  // Remove marker paragraphs
+  function removeMarked(blockList) {
+    return blockList.filter(b => {
+      if (toRemove.has(b.id)) return false;
+      if (b.children) b.children = removeMarked(b.children);
+      return true;
+    });
+  }
+  const cleaned = toRemove.size > 0 ? removeMarked(blocks) : blocks;
+
+  // Restore image props and inline markers
+  function walk(blockList) {
+    for (const block of blockList) {
+      if (block.type === 'image' && block.props?.url && imageProps[block.props.url]) {
+        const props = imageProps[block.props.url];
+        if (props.previewWidth) block.props.previewWidth = props.previewWidth;
+        if (props.textAlignment) block.props.textAlignment = props.textAlignment;
+      }
+
+      if (block.content && Array.isArray(block.content)) {
+        block.content = restoreInlineMarkers(block.content);
+      }
+
+      if (block.children) walk(block.children);
+    }
+  }
+  walk(cleaned);
+  return cleaned;
 }
 
-// Convert highlight marker tokens in inline content to backgroundColor style
-function restoreHighlights(contentArray) {
-  const result = [];
+// Process inline marker tokens (highlight, underline, textColor) into BlockNote styles
+function restoreInlineMarkers(contentArray) {
+  let result = [];
   for (const item of contentArray) {
-    if (item.type === 'text' && typeof item.text === 'string' && item.text.includes(HIGHLIGHT_OPEN)) {
-      // Split text around highlight markers and produce styled segments
-      const parts = splitHighlightMarkers(item.text);
-      for (const part of parts) {
-        result.push({
-          ...item,
-          text: part.text,
-          styles: part.highlighted
-            ? { ...item.styles, backgroundColor: 'yellow' }
-            : item.styles,
-        });
+    if (item.type === 'text' && typeof item.text === 'string') {
+      const hasHighlight = item.text.includes(HIGHLIGHT_OPEN);
+      const hasUnderline = item.text.includes(UNDERLINE_OPEN);
+      const hasColor = item.text.includes('\uFFF0TC:');
+      if (hasHighlight || hasUnderline || hasColor) {
+        const parts = splitMarkerTokens(item.text);
+        for (const part of parts) {
+          const styles = { ...item.styles };
+          if (part.highlight) styles.backgroundColor = 'yellow';
+          if (part.underline) styles.underline = true;
+          if (part.textColor) styles.textColor = part.textColor;
+          result.push({ ...item, text: part.text, styles });
+        }
+        continue;
       }
-    } else {
-      result.push(item);
+    }
+    result.push(item);
+  }
+  return result;
+}
+
+// Before markdown export, wrap styled text in marker tokens
+// so blocksToMarkdownLossy includes them in the output
+function injectInlineMarkers(blocks) {
+  for (const block of blocks) {
+    if (block.content && Array.isArray(block.content)) {
+      for (const item of block.content) {
+        if (item.type !== 'text') continue;
+        if (item.styles?.backgroundColor === 'yellow') {
+          item.text = `${HIGHLIGHT_OPEN}${item.text}${HIGHLIGHT_CLOSE}`;
+        }
+        if (item.styles?.underline) {
+          item.text = `${UNDERLINE_OPEN}${item.text}${UNDERLINE_CLOSE}`;
+        }
+        if (item.styles?.textColor && item.styles.textColor !== 'default') {
+          item.text = `${makeColorOpen(item.styles.textColor)}${item.text}${COLOR_CLOSE}`;
+        }
+      }
+    }
+    if (block.children) {
+      injectInlineMarkers(block.children);
+    }
+  }
+}
+
+// Collect non-default block-level metadata (textColor, backgroundColor, textAlignment)
+// Returns an array of { index, meta } where index is the top-level block position.
+function collectBlockMeta(blocks) {
+  const result = [];
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i];
+    const meta = {};
+    const p = block.props;
+    if (!p) continue;
+    if (p.textColor && p.textColor !== 'default') meta.textColor = p.textColor;
+    if (p.backgroundColor && p.backgroundColor !== 'default') meta.backgroundColor = p.backgroundColor;
+    if (p.textAlignment && p.textAlignment !== 'left') meta.textAlignment = p.textAlignment;
+    if (Object.keys(meta).length > 0) {
+      result.push({ index: i, meta });
     }
   }
   return result;
 }
 
-// Before markdown export, wrap yellow-backgrounded text in highlight markers
-// so blocksToMarkdownLossy includes them in the output
-function injectHighlightMarkers(blocks) {
-  for (const block of blocks) {
-    if (block.content && Array.isArray(block.content)) {
-      for (const item of block.content) {
-        if (item.type === 'text' && item.styles?.backgroundColor === 'yellow') {
-          item.text = `${HIGHLIGHT_OPEN}${item.text}${HIGHLIGHT_CLOSE}`;
-        }
-      }
-    }
-    if (block.children) {
-      injectHighlightMarkers(block.children);
-    }
+// Insert <!--blockProps:{...}--> comments before matching blocks in the markdown output.
+// Strategy: split markdown into blocks (separated by blank lines), match by block index.
+function injectBlockMetaComments(md, blockMeta) {
+  if (blockMeta.length === 0) return md;
+
+  // Split into "blocks" separated by blank lines
+  const parts = md.split(/\n\n/);
+  const result = [];
+
+  // Build a map from block index (counting non-empty content blocks) to metadata
+  // blockMeta entries have an `index` field set during collectBlockMeta
+  const metaByIndex = new Map();
+  for (const entry of blockMeta) {
+    metaByIndex.set(entry.index, entry.meta);
   }
+
+  let blockIdx = 0;
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) {
+      result.push(part);
+      continue;
+    }
+
+    if (metaByIndex.has(blockIdx)) {
+      const comment = `${BLOCK_PROPS_PREFIX}${JSON.stringify(metaByIndex.get(blockIdx))}${BLOCK_PROPS_SUFFIX}`;
+      result.push(comment + '\n' + part);
+    } else {
+      result.push(part);
+    }
+    blockIdx++;
+  }
+
+  return result.join('\n\n');
 }
 
-function splitHighlightMarkers(text) {
+// Split text on marker tokens and tag each segment with its styles.
+// Handles highlight, underline, and textColor markers.
+function splitMarkerTokens(text) {
+  // First pass: split on highlight markers
+  let segments = splitOnMarker(text, HIGHLIGHT_OPEN, HIGHLIGHT_CLOSE, 'highlight');
+
+  // Second pass: split each segment on underline markers
+  let segments2 = [];
+  for (const seg of segments) {
+    if (seg.text.includes(UNDERLINE_OPEN)) {
+      const subs = splitOnMarker(seg.text, UNDERLINE_OPEN, UNDERLINE_CLOSE, 'underline');
+      for (const sub of subs) {
+        segments2.push({ ...sub, highlight: seg.highlight || false });
+      }
+    } else {
+      segments2.push({ ...seg, underline: false });
+    }
+  }
+
+  // Third pass: split each segment on textColor markers
+  const result = [];
+  for (const seg of segments2) {
+    if (seg.text.includes('\uFFF0TC:')) {
+      const subs = splitOnColorMarker(seg.text);
+      for (const sub of subs) {
+        result.push({ text: sub.text, highlight: seg.highlight || false, underline: seg.underline || false, textColor: sub.textColor || null });
+      }
+    } else {
+      result.push({ ...seg, textColor: null });
+    }
+  }
+
+  return result.filter(s => s.text);
+}
+
+// Split text on textColor markers: \uFFF0TC:colorname\uFFF0text\uFFF0/TC\uFFF0
+function splitOnColorMarker(text) {
   const parts = [];
   let remaining = text;
   while (remaining.length > 0) {
-    const openIdx = remaining.indexOf(HIGHLIGHT_OPEN);
+    const match = remaining.match(/\uFFF0TC:([a-zA-Z]+)\uFFF0/);
+    if (!match) {
+      if (remaining) parts.push({ text: remaining, textColor: null });
+      break;
+    }
+    const idx = match.index;
+    if (idx > 0) {
+      parts.push({ text: remaining.slice(0, idx), textColor: null });
+    }
+    const color = match[1];
+    remaining = remaining.slice(idx + match[0].length);
+    const closeIdx = remaining.indexOf(COLOR_CLOSE);
+    if (closeIdx === -1) {
+      if (remaining) parts.push({ text: remaining, textColor: color });
+      break;
+    }
+    parts.push({ text: remaining.slice(0, closeIdx), textColor: color });
+    remaining = remaining.slice(closeIdx + COLOR_CLOSE.length);
+  }
+  return parts;
+}
+
+function splitOnMarker(text, openToken, closeToken, key) {
+  const parts = [];
+  let remaining = text;
+  while (remaining.length > 0) {
+    const openIdx = remaining.indexOf(openToken);
     if (openIdx === -1) {
-      if (remaining) parts.push({ text: remaining, highlighted: false });
+      if (remaining) parts.push({ text: remaining, [key]: false });
       break;
     }
     if (openIdx > 0) {
-      parts.push({ text: remaining.slice(0, openIdx), highlighted: false });
+      parts.push({ text: remaining.slice(0, openIdx), [key]: false });
     }
-    remaining = remaining.slice(openIdx + HIGHLIGHT_OPEN.length);
-    const closeIdx = remaining.indexOf(HIGHLIGHT_CLOSE);
+    remaining = remaining.slice(openIdx + openToken.length);
+    const closeIdx = remaining.indexOf(closeToken);
     if (closeIdx === -1) {
-      // No close marker — treat rest as highlighted
-      if (remaining) parts.push({ text: remaining, highlighted: true });
+      if (remaining) parts.push({ text: remaining, [key]: true });
       break;
     }
-    parts.push({ text: remaining.slice(0, closeIdx), highlighted: true });
-    remaining = remaining.slice(closeIdx + HIGHLIGHT_CLOSE.length);
+    parts.push({ text: remaining.slice(0, closeIdx), [key]: true });
+    remaining = remaining.slice(closeIdx + closeToken.length);
   }
   return parts;
 }

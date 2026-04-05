@@ -21,7 +21,7 @@ Doku/
 │   │   ├── App.jsx          # Main app with routing
 │   │   ├── api.js           # API client functions
 │   │   ├── frontmatter.js   # Client-side frontmatter parser
-│   │   ├── imageMarkdown.js # Markdown extensions (images, HR, emoji, highlight)
+│   │   ├── imageMarkdown.js # Markdown extensions (images, colors, alignment, HR, emoji, highlight, underline)
 │   │   ├── useDocEditor.js  # Shared editor hook (BlockNote + auto-save)
 │   │   ├── useTheme.js      # Dark/light mode hook
 │   │   └── components/

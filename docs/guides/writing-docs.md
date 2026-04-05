@@ -25,7 +25,11 @@ Doku uses BlockNote, a Notion-like block editor. You can:
 
 * Drag blocks to reorder content within a document
 
-Changes are saved automatically after 1 second of inactivity. There is no manual save button — just type and your work is preserved.
+* Change text and background colors via the toolbar color picker
+
+* Set block alignment (left, center, right) via the block menu
+
+Changes are saved automatically after 1 second of inactivity. There is no manual save button — just type and your work is preserved. All formatting — including colors, alignment, highlights, and underlines — is preserved in the markdown file.
 
 ## Deleting a Document
 

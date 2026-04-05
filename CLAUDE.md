@@ -24,7 +24,7 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
   - `src/App.jsx` — main app with routing
   - `src/components/` — Sidebar, Editor, FolderView, SearchBar, Breadcrumb
   - `src/frontmatter.js` — client-side frontmatter parser
-  - `src/imageMarkdown.js` — markdown extensions (image properties, horizontal rules, emoji shortcodes, highlight)
+  - `src/imageMarkdown.js` — markdown extensions (image properties, horizontal rules, emoji shortcodes, highlight, underline, HTML symbols, comments, block/inline colors and alignment)
   - `src/useDocEditor.js` — shared editor hook (BlockNote init, auto-save, content loading)
   - `src/useTheme.js` — dark/light mode hook
 - `icons/` — animated icons submodule (pqoqubbw/icons)
@@ -60,3 +60,8 @@ Beyond standard Markdown (headings, bold, italic, strikethrough, lists, code, bl
 - **Horizontal rules** — `---`, `***`, or `___` render as a visual separator and roundtrip back to `---`
 - **Emoji shortcodes** — `:rocket:`, `:heart:`, etc. render as unicode emoji in the editor and save back as shortcodes
 - **Highlight** — `==text==` renders with a yellow background and roundtrips back to `==text==`
+- **Underline** — `<ins>text</ins>` renders as underlined text and roundtrips back to `<ins>`
+- **HTML symbols** — `&copy;`, `&rarr;`, `&#169;`, `&#x2764;` etc. are converted to unicode on load
+- **Comments** — `[comment text]: #` lines are hidden in the editor and preserved on save
+- **Block colors & alignment** — block-level `textColor`, `backgroundColor`, and `textAlignment` are stored as `<!--blockProps:{...}-->` HTML comments above the block and restored on load
+- **Inline text color** — inline `textColor` is stored as `<!--tc:color-->text<!--/tc-->` and restored on load
