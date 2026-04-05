@@ -4,7 +4,7 @@ import { useCreateBlockNote } from '@blocknote/react';
 import { BlockNoteView } from '@blocknote/mantine';
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
-import { fetchFolder, saveFolderIndex } from '../api';
+import { fetchFolder, saveFolderIndex, uploadImage } from '../api';
 import { parseFrontmatter, serializeFrontmatter } from '../frontmatter';
 import { useTheme } from '../useTheme';
 import { FileTextIcon, FolderOpenIcon, MaximizeIcon, MinimizeIcon } from './icons';
@@ -19,7 +19,13 @@ export default function FolderView({ folderPath, onTreeChange, fullWidth, onTogg
   const editorContainerRef = useRef(null);
   const theme = useTheme();
 
-  const editor = useCreateBlockNote({ initialContent: undefined });
+  const editor = useCreateBlockNote({
+    initialContent: undefined,
+    uploadFile: async (file) => {
+      const result = await uploadImage(file);
+      return result.url;
+    },
+  });
 
   useEffect(() => {
     if (!folderPath) return;

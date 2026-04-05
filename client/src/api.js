@@ -65,6 +65,14 @@ export async function saveFolderIndex(folderPath, content) {
   return saveDoc(folderPath, content);
 }
 
+export async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append('image', file);
+  const res = await fetch(`${BASE}/upload`, { method: 'POST', body: formData });
+  if (!res.ok) throw new Error('Upload failed');
+  return res.json();
+}
+
 export async function searchDocs(query) {
   const res = await fetch(`${BASE}/search?q=${encodeURIComponent(query)}`);
   if (!res.ok) throw new Error('Search failed');

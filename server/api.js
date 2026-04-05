@@ -1,6 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+const multer = require('multer');
 const search = require('./search');
 const config = require('./config');
 const { parseFrontmatter, extractTitle, formatName } = require('./frontmatter');
@@ -11,6 +13,41 @@ const DOCS_DIR = config.docsPath;
 // GET /api/config — public config for frontend
 router.get('/config', (req, res) => {
   res.json({ projectName: config.projectName });
+});
+
+// Assets directory for uploaded images
+const ASSETS_DIR = path.join(DOCS_DIR, 'assets');
+if (!fs.existsSync(ASSETS_DIR)) {
+  fs.mkdirSync(ASSETS_DIR, { recursive: true });
+}
+
+// Serve assets statically
+router.use('/assets', express.static(ASSETS_DIR));
+
+// Image upload
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, ASSETS_DIR),
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname).toLowerCase();
+      const id = crypto.randomBytes(8).toString('hex');
+      cb(null, `${id}${ext}`);
+    },
+  }),
+  fileFilter: (req, file, cb) => {
+    const allowed = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.bmp'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, allowed.includes(ext));
+  },
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+});
+
+router.post('/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No valid image file' });
+  }
+  const url = `/api/assets/${req.file.filename}`;
+  res.json({ url, filename: req.file.filename });
 });
 
 // Express 5 returns wildcard params as arrays — join them back into a path string
@@ -47,7 +84,7 @@ function buildTree(dirPath, basePath = '') {
   );
 
   for (const entry of entries) {
-    if (entry.name.startsWith('.') || entry.name === '_meta.json' || entry.name === 'config.json') continue;
+    if (entry.name.startsWith('.') || entry.name === '_meta.json' || entry.name === 'config.json' || entry.name === 'assets') continue;
 
     const relativePath = basePath ? `${basePath}/${entry.name}` : entry.name;
 

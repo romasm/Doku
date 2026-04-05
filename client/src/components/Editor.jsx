@@ -5,6 +5,7 @@ import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
 import { parseFrontmatter, serializeFrontmatter } from '../frontmatter';
 import { useTheme } from '../useTheme';
+import { uploadImage } from '../api';
 import { DeleteIcon, MaximizeIcon, MinimizeIcon } from './icons';
 import Breadcrumb from './Breadcrumb';
 import './Editor.css';
@@ -17,6 +18,10 @@ export default function Editor({ content, docPath, onSave, onDelete, isFolder, f
 
   const editor = useCreateBlockNote({
     initialContent: undefined,
+    uploadFile: async (file) => {
+      const result = await uploadImage(file);
+      return result.url;
+    },
   });
 
   useMemo(() => {
