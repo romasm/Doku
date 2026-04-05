@@ -1,0 +1,55 @@
+.folder-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.folder-editor {
+  margin-bottom: 24px;
+}
+
+.folder-children {
+  border-top: 1px solid var(--color-border);
+  padding-top: 16px;
+}
+
+.folder-children-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.folder-children-list {
+  list-style: none;
+  padding: 0;
+}
+
+.folder-child-item {
+  margin-bottom: 2px;
+}
+
+.folder-child-link {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: background 0.1s;
+}
+
+.folder-child-link:hover {
+  background: var(--color-hover);
+}
+
+.folder-child-icon {
+  margin-right: 8px;
+  font-size: 1rem;
+}
+
+.folder-child-name {
+  font-size: 0.9rem;
+}

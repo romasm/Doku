@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --sidebar-width: 280px;
+  --header-height: 48px;
+  --color-bg: #ffffff;
+  --color-sidebar: #f8f9fa;
+  --color-border: #e1e4e8;
+  --color-primary: #2563eb;
+  --color-primary-light: #dbeafe;
+  --color-text: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-hover: #f3f4f6;
+  --color-danger: #dc2626;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+#root {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}

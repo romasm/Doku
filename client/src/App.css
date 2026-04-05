@@ -1,0 +1,36 @@
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 40px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-secondary);
+}
+
+.welcome h1 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  color: var(--color-text);
+}
+
+.loading, .not-found {
+  padding: 40px;
+  text-align: center;
+  color: var(--color-text-secondary);
+}

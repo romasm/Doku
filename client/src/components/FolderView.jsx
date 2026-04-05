@@ -1,0 +1,89 @@
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { useCreateBlockNote } from '@blocknote/react';
+import { BlockNoteView } from '@blocknote/mantine';
+import '@blocknote/core/fonts/inter.css';
+import '@blocknote/mantine/style.css';
+import { fetchFolder, saveFolderIndex } from '../api';
+import { parseFrontmatter, serializeFrontmatter } from '../frontmatter';
+import './FolderView.css';
+
+export default function FolderView({ folderPath, onTreeChange }) {
+  const [folder, setFolder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const saveTimerRef = useRef(null);
+  const frontmatterRef = useRef({});
+
+  const editor = useCreateBlockNote({ initialContent: undefined });
+
+  useEffect(() => {
+    if (!folderPath) return;
+    setLoading(true);
+    fetchFolder(folderPath)
+      .then((data) => {
+        setFolder(data);
+        if (editor && data.content) {
+          const { frontmatter, body } = parseFrontmatter(data.content);
+          frontmatterRef.current = frontmatter;
+          (async () => {
+            try {
+              const blocks = await editor.tryParseMarkdownToBlocks(body);
+              editor.replaceBlocks(editor.document, blocks);
+            } catch {
+              editor.replaceBlocks(editor.document, [
+                { type: 'paragraph', content: [{ type: 'text', text: body }] },
+              ]);
+            }
+          })();
+        }
+      })
+      .catch(() => setFolder(null))
+      .finally(() => setLoading(false));
+  }, [folderPath, editor]);
+
+  const handleChange = useCallback(async () => {
+    clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(async () => {
+      const md = await editor.blocksToMarkdownLossy(editor.document);
+      const full = serializeFrontmatter(frontmatterRef.current, md);
+      await saveFolderIndex(folderPath, full);
+      onTreeChange();
+    }, 1000);
+  }, [editor, folderPath, onTreeChange]);
+
+  if (loading) return <div className="loading">Loading...</div>;
+  if (!folder) return <div className="not-found">Folder not found.</div>;
+
+  return (
+    <div className="folder-view">
+      <div className="editor-toolbar">
+        <span className="editor-path">{folderPath}/</span>
+      </div>
+
+      <div className="folder-editor">
+        <BlockNoteView editor={editor} onChange={handleChange} theme="light" />
+      </div>
+
+      {folder.children && folder.children.length > 0 && (
+        <div className="folder-children">
+          <h3 className="folder-children-title">Contents</h3>
+          <ul className="folder-children-list">
+            {folder.children.map((item) => (
+              <li key={item.path} className="folder-child-item">
+                <Link
+                  to={`/doc/${item.path}`}
+                  className="folder-child-link"
+                >
+                  <span className="folder-child-icon">
+                    {item.type === 'folder' ? '\u{1F4C1}' : '\u{1F4C4}'}
+                  </span>
+                  <span className="folder-child-name">{item.title || item.name}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
