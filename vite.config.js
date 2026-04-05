@@ -5,6 +5,11 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   root: 'client',
+  test: {
+    // Vitest: run from project root, not client/
+    root: '.',
+    include: ['client/src/**/*.test.js', 'test/**/*.test.js'],
+  },
   resolve: {
     alias: {
       '@/lib/utils': path.resolve(__dirname, 'client/src/lib/utils.js'),
