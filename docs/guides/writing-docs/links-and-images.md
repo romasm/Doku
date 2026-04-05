@@ -11,7 +11,7 @@ Use `[text](url)` to create a link.
 
 [Example link](https://example.com)
 
-```text
+```markdown
 [Example link](https://example.com)
 ```
 
@@ -27,7 +27,7 @@ The easiest way to add an image is to drag and drop it into the editor. The file
 
 You can also write image syntax directly:
 
-```text
+```markdown
 ![Description of the image](/api/assets/filename.png)
 ```
 

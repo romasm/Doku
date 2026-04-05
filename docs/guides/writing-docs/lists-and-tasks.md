@@ -15,7 +15,7 @@ Start each line with a number and a period.
 
 3. Third item
 
-```text
+```markdown
 1. First item
 2. Second item
 3. Third item
@@ -31,7 +31,7 @@ Start each line with a dash, asterisk, or plus sign.
 
 * Third item
 
-```text
+```markdown
 - First item
 - Second item
 - Third item
@@ -53,7 +53,7 @@ Indent with spaces or Tab to create nested items.
 
    2. Another numbered sub-item
 
-```text
+```markdown
 1. Main item
    - Sub-item one
    - Sub-item two
@@ -72,7 +72,7 @@ Create interactive checklists with `- [ ]` (unchecked) and `- [x]` (checked).
 * [x] Add code examples
 * [ ] Review and publish
 
-```text
+```markdown
 - [x] Write the introduction
 - [x] Add code examples
 - [ ] Review and publish

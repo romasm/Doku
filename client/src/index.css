@@ -16,8 +16,8 @@
   --color-text-secondary: #6b7280;
   --color-hover: #f3f4f6;
   --color-danger: #dc2626;
-  --color-code-bg: #f3f4f6;
-  --color-code-text: #1f2937;
+  --color-code-bg: #2d333b;
+  --color-code-text: #adbac7;
 }
 
 [data-theme="dark"] {
@@ -32,6 +32,13 @@
   --color-danger: #f87171;
   --color-code-bg: #25262b;
   --color-code-text: #e1e3e6;
+}
+
+/* Override BlockNote's pale yellow highlight to be more visible in light theme */
+:root:not([data-theme="dark"]) [data-style-type="backgroundColor"][data-value="yellow"],
+:root:not([data-theme="dark"]) [data-background-color="yellow"],
+:root:not([data-theme="dark"]) .bn-block:has(> .bn-block-content[data-background-color="yellow"]) {
+  background-color: #fef08a !important;
 }
 
 body {

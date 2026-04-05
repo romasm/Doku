@@ -33,7 +33,7 @@ This is ***bold and italic***.
 
 Wrap text in double tildes for ~~strikethrough~~.
 
-```text
+```markdown
 This is ~~strikethrough text~~.
 ```
 
@@ -41,7 +41,7 @@ This is ~~strikethrough text~~.
 
 Wrap text in `==double equals==` for a yellow highlight background.
 
-```text
+```markdown
 This is ==highlighted text==.
 ```
 
@@ -49,7 +49,7 @@ This is ==highlighted text==.
 
 Use the keyboard shortcut **Ctrl+U** for <ins>underlined text</ins>.
 
-```text
+```html
 This is <ins>underlined text</ins>.
 ```
 
@@ -57,7 +57,7 @@ This is <ins>underlined text</ins>.
 
 Select text and use the color picker in the toolbar to change its color, like this <!--tc:red-->red word<!--/tc--> or this <!--tc:blue-->blue word<!--/tc-->.
 
-```text
+```html
 This has <!--tc:red-->red text<!--/tc--> in it.
 ```
 
@@ -70,7 +70,7 @@ Select a block and use the color picker to set a background color.
 <!--blockProps:{"backgroundColor":"yellow"}-->
 This paragraph has a yellow background.
 
-```text
+```html
 <!--blockProps:{"backgroundColor":"yellow"}-->
 This paragraph has a yellow background.
 ```
@@ -82,7 +82,7 @@ Use the block menu to set alignment to center, right, or justify.
 <!--blockProps:{"textAlignment":"center"}-->
 This paragraph is centered.
 
-```text
+```html
 <!--blockProps:{"textAlignment":"center"}-->
 This paragraph is centered.
 ```
@@ -91,6 +91,6 @@ This paragraph is centered.
 
 Wrap text in backticks for `inline code`.
 
-```text
+```markdown
 Use the `console.log()` function.
 ```

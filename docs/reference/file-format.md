@@ -51,7 +51,7 @@ The editor stores certain properties that standard Markdown cannot represent usi
 
 Block-level colors and alignment are stored as a comment on the line before the block:
 
-```text
+```html
 <!--blockProps:{"textColor":"red","textAlignment":"center"}-->
 This paragraph has red text and is centered.
 ```
@@ -62,7 +62,7 @@ Supported properties: `textColor`, `backgroundColor`, `textAlignment` (left, cen
 
 Inline text color is stored as comment tags wrapping the colored text:
 
-```text
+```html
 This has <!--tc:green-->green text<!--/tc--> in a sentence.
 ```
 

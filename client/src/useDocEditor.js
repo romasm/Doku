@@ -1,8 +1,54 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { useCreateBlockNote } from '@blocknote/react';
+import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
+import { createCodeBlockSpec } from '@blocknote/core';
+import { createHighlighter } from 'shiki';
 import { parseFrontmatter, serializeFrontmatter } from './frontmatter';
 import { blocksToMarkdown, preprocessMarkdown, restoreBlockProps } from './imageMarkdown';
 import { uploadImage } from './api';
+
+// Create schema with Shiki syntax highlighting.
+// createHighlighter returns a promise — BlockNote's prosemirror-highlight plugin
+// handles this asynchronously and re-renders decorations when it resolves.
+const schema = BlockNoteSchema.create({
+  blockSpecs: {
+    ...defaultBlockSpecs,
+    codeBlock: createCodeBlockSpec({
+      defaultLanguage: 'text',
+      supportedLanguages: {
+        text: { name: 'Plain Text', aliases: ['txt', 'plaintext'] },
+        javascript: { name: 'JavaScript', aliases: ['js'] },
+        typescript: { name: 'TypeScript', aliases: ['ts'] },
+        python: { name: 'Python', aliases: ['py'] },
+        html: { name: 'HTML' },
+        css: { name: 'CSS' },
+        json: { name: 'JSON' },
+        bash: { name: 'Bash', aliases: ['sh', 'shell'] },
+        markdown: { name: 'Markdown', aliases: ['md'] },
+        yaml: { name: 'YAML', aliases: ['yml'] },
+        sql: { name: 'SQL' },
+        java: { name: 'Java' },
+        c: { name: 'C' },
+        cpp: { name: 'C++' },
+        go: { name: 'Go' },
+        rust: { name: 'Rust', aliases: ['rs'] },
+        ruby: { name: 'Ruby', aliases: ['rb'] },
+        php: { name: 'PHP' },
+        xml: { name: 'XML' },
+        jsx: { name: 'JSX' },
+        tsx: { name: 'TSX' },
+      },
+      createHighlighter: () => createHighlighter({
+        themes: ['github-dark', 'github-light'],
+        langs: [
+          'javascript', 'typescript', 'python', 'html', 'css', 'json',
+          'bash', 'markdown', 'yaml', 'sql', 'java', 'c', 'cpp', 'go',
+          'rust', 'ruby', 'php', 'shell', 'xml', 'jsx', 'tsx',
+        ],
+      }),
+    }),
+  },
+});
 
 export function useDocEditor(content, onSave) {
   const saveTimerRef = useRef(null);
@@ -10,6 +56,7 @@ export function useDocEditor(content, onSave) {
   const commentsRef = useRef([]);
 
   const editor = useCreateBlockNote({
+    schema,
     initialContent: undefined,
     uploadFile: async (file) => {
       const result = await uploadImage(file);
@@ -17,7 +64,7 @@ export function useDocEditor(content, onSave) {
     },
   });
 
-  // Load content into editor (useEffect, not useMemo — this is a side effect)
+  // Load content into editor
   useEffect(() => {
     if (editor && content !== undefined) {
       const { frontmatter, body } = parseFrontmatter(content);

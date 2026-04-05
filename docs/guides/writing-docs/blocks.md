@@ -9,7 +9,7 @@ Block-level elements that structure your document.
 
 Use `#` symbols for headings, from level 1 (largest) to level 6 (smallest).
 
-```text
+```markdown
 # Heading 1
 ## Heading 2
 ### Heading 3
@@ -36,7 +36,7 @@ Start a line with `>` to create a blockquote.
 
 > This is a blockquote.
 
-```text
+```markdown
 > This is a blockquote.
 ```
 
@@ -58,7 +58,7 @@ Place `---` on its own line to create a visual separator.
 
 ***
 
-```text
+```markdown
 Some content above.
 
 ---

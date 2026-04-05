@@ -39,7 +39,7 @@ To remove an icon, open the picker and click the clear button.
 
 Icons are stored as an `icon` field in the document's frontmatter:
 
-```text
+```markdown
 ---
 ordering: 1
 icon: 🚀

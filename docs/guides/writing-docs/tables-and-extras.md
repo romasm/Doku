@@ -15,7 +15,7 @@ Create tables with pipes and dashes.
 | Bob   | Designer  | Active   |
 | Carol | Manager   | On leave |
 
-```text
+```markdown
 | Name | Role | Status |
 | --- | --- | --- |
 | Alice | Developer | Active |
@@ -54,7 +54,7 @@ Type emoji shortcodes surrounded by colons. They render as unicode emoji in the 
 
 Use HTML entities for special characters. They are converted to unicode automatically.
 
-```text
+```markdown
 &copy; &reg; &trade; &euro; &pound;
 &rarr; &larr; &uarr; &darr;
 &infin; &ne; &le; &ge;
@@ -67,7 +67,7 @@ Numeric entities also work: `©` for © and `❤` for ❤.
 
 Hide text from the editor using the markdown comment syntax. Comments are invisible in the UI but preserved in the file.
 
-```text
+```markdown
 [This comment is hidden]: #
 [TODO: review later]: #
 ```
@@ -84,7 +84,7 @@ Use emoji at the start of a blockquote for callout-style notes.
 
 > :memo: **Note:** Additional context goes here.
 
-```text
+```markdown
 > :warning: **Warning:** Be careful with this operation.
 
 > :bulb: **Tip:** This is a helpful suggestion.
