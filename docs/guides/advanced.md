@@ -1,6 +1,5 @@
 ---
 ordering: 3
-icon: 😀
 ---
 # Advanced Usage
 
