@@ -1,6 +1,6 @@
 {
   "name": "@romansmirnov/doku",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Personal documentation system with Markdown storage and WYSIWYG editing",
   "main": "server/index.js",
   "bin": {
@@ -21,7 +21,13 @@
     "preview": "vite preview",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["documentation", "markdown", "wiki", "notes", "knowledge-base"],
+  "keywords": [
+    "documentation",
+    "markdown",
+    "wiki",
+    "notes",
+    "knowledge-base"
+  ],
   "author": "Roman Smirnov",
   "license": "MIT",
   "type": "commonjs",
