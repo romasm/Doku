@@ -36,7 +36,7 @@ Creates parent directories automatically if they don't exist.
 
 ### DELETE /api/doc/:path
 
-Delete a document. If this was the last file in a folder, the empty folder is automatically removed (reverting the parent entry to a plain document).
+Delete a document. If the document is a folder index (has a sibling folder), the folder and all its children are also deleted. If this was the last file in a parent folder, the empty parent folder is automatically removed.
 
 ## Folder Endpoints
 
@@ -66,7 +66,7 @@ Upload an image file. Images are saved to `docs/assets/` with a unique hex filen
 
 **Response:** `{ "url": "/api/assets/abc123.png", "filename": "abc123.png" }`
 
-Supported formats: png, jpg, jpeg, gif, webp, svg, bmp. Max size: 10MB.
+Supported formats: png, jpg, jpeg, gif, webp, bmp. Max size: 10MB.
 
 ### GET /api/assets/:filename
 
@@ -93,6 +93,6 @@ Full-text search across all documents. Searches body content (frontmatter exclud
 
 ### POST /api/move
 
-Move or rename a document.
+Move or rename a document. If the document has a sibling folder (i.e. it is a folder index), the folder is moved along with it.
 
 **Request body:** `{ "from": "old/path", "to": "new/path" }`

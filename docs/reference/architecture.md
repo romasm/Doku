@@ -20,6 +20,8 @@ Doku/
 │   │   ├── App.jsx          # Main app with routing
 │   │   ├── api.js           # API client functions
 │   │   ├── frontmatter.js   # Client-side frontmatter parser
+│   │   ├── imageMarkdown.js # Image width/alignment preservation
+│   │   ├── useDocEditor.js  # Shared editor hook (BlockNote + auto-save)
 │   │   ├── useTheme.js      # Dark/light mode hook
 │   │   └── components/
 │   │       ├── Sidebar.jsx      # Tree navigation + search + dark mode toggle

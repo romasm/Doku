@@ -33,6 +33,4 @@ The BlockNote editor supports standard keyboard shortcuts for fast editing.
 
 * **Arrow Up/Down** — Navigate search results
 
-*
-
 * **Enter** — Select a search result

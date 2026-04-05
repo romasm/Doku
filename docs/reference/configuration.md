@@ -7,13 +7,12 @@ Doku is configured through two mechanisms: a CLI argument for the docs path, and
 
 ## Docs Path (CLI Argument)
 
-The docs folder path is passed as a command-line argument when starting the server:
+The docs folder path is passed as a command-line argument:
 
 ```text
-node server/index.js ./docs
-node server/index.js C:/Users/me/my-knowledge-base
-open_docs.bat ./docs
-open_docs.bat ../other-docs
+dokudocs ./docs
+dokudocs C:/Users/me/my-knowledge-base
+dokudocs ../other-docs
 ```
 
 If omitted, it defaults to `./docs` relative to the current working directory.
@@ -51,7 +50,7 @@ Place a `config.json` file inside your docs folder to configure project-level se
 **Development** (two processes):
 
 ```text
-node server/index.js ./docs     # Backend on port 4782
+dokudocs ./docs                 # Backend on port 4782
 npx vite                        # Frontend on port 5173 (proxies API)
 ```
 
@@ -59,7 +58,7 @@ npx vite                        # Frontend on port 5173 (proxies API)
 
 ```text
 npx vite build                  # Build frontend to dist/
-node server/index.js ./docs     # Serves API + frontend on port 4782
+dokudocs ./docs                 # Serves API + frontend on port 4782
 ```
 
 Or use `open_docs.bat [docs-path]` which automates the build and launch.
