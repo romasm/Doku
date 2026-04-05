@@ -37,6 +37,8 @@ For development, you can also use `open_docs.bat` (Windows) or `./open_docs.sh` 
 
 * **Width toggle** — switch between narrow and full-width document view
 
+* **Table of contents** — floating heading outline on the right side, hover to expand, click to navigate
+
 * **Frontmatter** — each file supports YAML frontmatter for metadata like ordering (hidden in the UI)
 
 ## How It Works

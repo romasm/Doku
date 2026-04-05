@@ -21,10 +21,13 @@ Read a document by its path (without `.md` extension).
 
 **Response:**
 
-- `content` — full file content including frontmatter
-- `path` — document path
-- `updatedAt` — last modification timestamp
-- `isFolder` — `true` if a matching subfolder exists
+* `content` — full file content including frontmatter
+
+* `path` — document path
+
+* `updatedAt` — last modification timestamp
+
+* `isFolder` — `true` if a matching subfolder exists
 
 ### PUT /api/doc/:path
 
@@ -46,9 +49,11 @@ Get a folder's index content and children list.
 
 **Response:**
 
-- `content` — content of the sibling index `.md` file (e.g. `guides.md` for `guides/`)
-- `path` — folder path
-- `children` — array of child items (same format as tree items)
+* `content` — content of the sibling index `.md` file (e.g. `guides.md` for `guides/`)
+
+* `path` — folder path
+
+* `children` — array of child items (same format as tree items)
 
 ### POST /api/folder
 
@@ -78,12 +83,17 @@ Serves uploaded images as static files from the assets directory.
 
 Returns the full document tree as nested JSON. Each item includes:
 
-- `name` — filename slug
-- `title` — display name (from `# heading` or formatted filename)
-- `path` — relative path
-- `type` — `"file"` or `"folder"`
-- `ordering` — numeric ordering value (if set in frontmatter)
-- `children` — nested items (folders only)
+* `name` — filename slug
+
+* `title` — display name (from `# heading` or formatted filename)
+
+* `path` — relative path
+
+* `type` — `"file"` or `"folder"`
+
+* `ordering` — numeric ordering value (if set in frontmatter)
+
+* `children` — nested items (folders only)
 
 ### GET /api/search?q=query
 

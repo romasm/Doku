@@ -22,7 +22,7 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
   - `watcher.js` — file watcher + SSE for live reload
 - `client/` — React frontend (Vite)
   - `src/App.jsx` — main app with routing
-  - `src/components/` — Sidebar, Editor, FolderView, SearchBar, Breadcrumb
+  - `src/components/` — Sidebar, Editor, FolderView, SearchBar, Breadcrumb, TableOfContents
   - `src/frontmatter.js` — client-side frontmatter parser
   - `src/imageMarkdown.js` — markdown extensions (image properties, horizontal rules, emoji shortcodes, highlight, underline, HTML symbols, comments, block/inline colors and alignment)
   - `src/useDocEditor.js` — shared editor hook (BlockNote init, auto-save, content loading)
@@ -31,7 +31,10 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
 - `docs/` — default documentation content folder
   - `config.json` — project config (projectName, port)
   - `assets/` — uploaded images
+- `test/` — integration tests (API roundtrip)
+  - `roundtrip.test.js` — write → read → write → read stability test for all markdown features
 - `open_docs.bat` / `open_docs.sh` — builds frontend + launches server
+- `tests.bat` — runs all tests with verbose output
 
 ## Configuration
 
@@ -65,3 +68,10 @@ Beyond standard Markdown (headings, bold, italic, strikethrough, lists, code, bl
 - **Comments** — `[comment text]: #` lines are hidden in the editor and preserved on save
 - **Block colors & alignment** — block-level `textColor`, `backgroundColor`, and `textAlignment` are stored as `<!--blockProps:{...}-->` HTML comments above the block and restored on load
 - **Inline text color** — inline `textColor` is stored as `<!--tc:color-->text<!--/tc-->` and restored on load
+
+## Testing
+
+- **Framework:** Vitest (compatible with the Vite setup)
+- **Run:** `npm test` or `tests.bat`
+- **Unit tests:** `client/src/imageMarkdown.test.js` (preprocessing, postprocessing, code block protection, inline markers), `client/src/frontmatter.test.js` (parse, serialize, roundtrip)
+- **Integration tests:** `test/roundtrip.test.js` (starts a server, writes a comprehensive .md via API, reads it back, verifies all formatting features survive the roundtrip)

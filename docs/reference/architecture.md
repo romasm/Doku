@@ -29,8 +29,9 @@ Doku/
 │   │       ├── Editor.jsx       # BlockNote WYSIWYG editor
 │   │       ├── FolderView.jsx   # Folder index + children list
 │   │       ├── SearchBar.jsx    # Search input + results dropdown
-│   │       ├── Breadcrumb.jsx   # Clickable path navigation
-│   │       └── icons.js         # Re-exports from icons submodule
+│   │       ├── Breadcrumb.jsx       # Clickable path navigation
+│   │       ├── TableOfContents.jsx  # Floating heading outline overlay
+│   │       └── icons.js             # Re-exports from icons submodule
 │   └── index.html
 ├── icons/                   # Animated icons submodule (pqoqubbw/icons)
 ├── docs/                    # Documentation content (Markdown)

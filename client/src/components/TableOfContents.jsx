@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './TableOfContents.css';
 
 export default function TableOfContents({ editor }) {
@@ -43,31 +43,46 @@ export default function TableOfContents({ editor }) {
 
   // Track which heading is currently in view
   useEffect(() => {
-    const editorArea = document.querySelector('.editor-area');
+    const editorArea = document.querySelector('.editor-blocknote') || document.querySelector('.editor-area');
     if (!editorArea || headings.length === 0) return;
 
     const onScroll = () => {
-      let current = null;
+      let current = headings[0]?.id || null;
       for (const h of headings) {
         const el = document.querySelector(`[data-id="${h.id}"]`);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= 120) current = h.id;
+          if (rect.top <= 150) current = h.id;
         }
       }
-      if (current !== activeId) setActiveId(current);
+      setActiveId(current);
     };
 
+    onScroll();
     editorArea.addEventListener('scroll', onScroll, { passive: true });
     return () => editorArea.removeEventListener('scroll', onScroll);
-  }, [headings, activeId]);
+  }, [headings]);
 
-  const levelSymbol = { 1: '===', 2: '---', 3: '--', 4: '-', 5: '-', 6: '-' };
+
+  const overlayRef = useRef(null);
+
+  useEffect(() => {
+    const el = overlayRef.current;
+    if (!el) return;
+    const onWheel = (e) => {
+      e.preventDefault();
+      const target = document.querySelector('.editor-blocknote') || document.querySelector('.editor-area');
+      if (target) target.scrollTop += e.deltaY;
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
 
   if (headings.length === 0) return null;
 
   return (
     <div
+      ref={overlayRef}
       className="toc-overlay"
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
@@ -77,10 +92,8 @@ export default function TableOfContents({ editor }) {
           {headings.map((h) => (
             <div
               key={h.id}
-              className={`toc-hint ${activeId === h.id ? 'active' : ''}`}
-            >
-              {levelSymbol[h.level] || '-'}
-            </div>
+              className={`toc-hint toc-hint-${h.level} ${activeId === h.id ? 'active' : ''}`}
+            />
           ))}
         </div>
       )}

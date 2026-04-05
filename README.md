@@ -18,6 +18,7 @@ A personal documentation system that stores docs as plain Markdown files and pro
 - **Image support** — drag and drop images into documents
 - **Frontmatter** — YAML metadata for ordering
 - **Breadcrumb navigation** — clickable path segments to navigate parent pages
+- **Table of contents** — floating heading outline on the right, hover to expand and navigate
 - **Emoji shortcodes** — `:rocket:`, `:heart:` etc. rendered as unicode emoji
 - **Highlight syntax** — `==text==` renders with yellow background
 - **Horizontal rules** — `---` renders as a visual separator
@@ -58,6 +59,9 @@ git submodule update --init
 # Start in development mode (two terminals)
 node server/index.js          # Backend on port 4782
 npx vite                      # Frontend on port 5173 with hot reload
+
+# Run tests
+npm test
 
 # Or build and run in production
 open_docs.bat                 # Windows
