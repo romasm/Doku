@@ -6,6 +6,7 @@ const multer = require('multer');
 const search = require('./search');
 const config = require('./config');
 const { parseFrontmatter, extractTitle, formatName } = require('./frontmatter');
+const { markSaved } = require('./watcher');
 
 const router = express.Router();
 const DOCS_DIR = config.docsPath;
@@ -206,6 +207,7 @@ router.put('/doc/{*docPath}', (req, res) => {
     fs.mkdirSync(dir, { recursive: true });
   }
 
+  markSaved(docPath);
   fs.writeFileSync(filePath, req.body.content || '', 'utf-8');
   res.json({ success: true, path: docPath });
 });
@@ -229,6 +231,7 @@ router.delete('/doc/{*docPath}', (req, res) => {
     fs.rmSync(siblingFolder, { recursive: true, force: true });
   }
 
+  markSaved(docPath);
   fs.unlinkSync(filePath);
 
   // Auto-cleanup: if the parent folder is now empty, remove it

@@ -13,6 +13,13 @@ function DocPage({ onTreeChange, fullWidth, onToggleWidth }) {
   const [doc, setDoc] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const reloadDoc = useCallback(() => {
+    if (!docPath) return;
+    fetchDoc(docPath)
+      .then((d) => setDoc(d))
+      .catch(() => setDoc(null));
+  }, [docPath]);
+
   useEffect(() => {
     if (!docPath) {
       setDoc(null);
@@ -24,6 +31,18 @@ function DocPage({ onTreeChange, fullWidth, onToggleWidth }) {
       .catch(() => setDoc(null))
       .finally(() => setLoading(false));
   }, [docPath]);
+
+  // Re-fetch when the file is changed externally
+  useEffect(() => {
+    function onDocChanged(e) {
+      const changedPath = e.detail.replace(/\.md$/, '');
+      if (changedPath === docPath) {
+        reloadDoc();
+      }
+    }
+    window.addEventListener('doc-changed', onDocChanged);
+    return () => window.removeEventListener('doc-changed', onDocChanged);
+  }, [docPath, reloadDoc]);
 
   const handleSave = useCallback(
     async (content) => {
@@ -112,6 +131,22 @@ export default function App() {
   useEffect(() => {
     loadTree();
     fetchConfig().then((c) => setProjectName(c.projectName)).catch(() => {});
+  }, [loadTree]);
+
+  // Hot reload: listen for external file changes via SSE
+  useEffect(() => {
+    const es = new EventSource('/api/events');
+    es.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === 'change') {
+          loadTree();
+          // Dispatch a custom event so DocPage can reload if the changed file matches
+          window.dispatchEvent(new CustomEvent('doc-changed', { detail: data.path }));
+        }
+      } catch {}
+    };
+    return () => es.close();
   }, [loadTree]);
 
   // "New Document" handler used by both sidebar entries and root button.

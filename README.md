@@ -13,6 +13,7 @@ A personal documentation system that stores docs as plain Markdown files and pro
 - **Hierarchical folders** — organize docs in nested folders with a collapsible sidebar tree
 - **Full-text search** — instant search across all documents with highlighted snippets
 - **Auto-save** — changes save automatically (1-second debounce)
+- **Live reload** — external file changes are detected and reflected instantly in the browser
 - **Dark mode** — toggle between light and dark themes
 - **Image support** — drag and drop images into documents
 - **Frontmatter** — YAML metadata for ordering

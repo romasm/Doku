@@ -13,6 +13,7 @@ Doku/
 │   ├── index.js             # Server entry point
 │   ├── api.js               # REST API routes + image upload
 │   ├── search.js            # Full-text search
+│   ├── watcher.js           # File watcher + SSE for live reload
 │   ├── config.js            # Config loader (CLI args + docs/config.json)
 │   └── frontmatter.js       # YAML frontmatter parser
 ├── client/                  # React frontend (Vite)
@@ -69,6 +70,7 @@ Doku/
 5. The API writes the file to disk
 
 6. Image drops are handled by BlockNote's upload callback, which POSTs to `/api/upload` and saves to `docs/assets/`
+7. A **file watcher** monitors the docs folder for external changes and pushes notifications to the browser via Server-Sent Events (SSE), triggering automatic sidebar and editor refresh
 
 ## No Database
 

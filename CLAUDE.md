@@ -19,6 +19,7 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
   - `config.js` — config loader (CLI args + docs/config.json)
   - `frontmatter.js` — YAML frontmatter parser
   - `search.js` — full-text search
+  - `watcher.js` — file watcher + SSE for live reload
 - `client/` — React frontend (Vite)
   - `src/App.jsx` — main app with routing
   - `src/components/` — Sidebar, Editor, FolderView, SearchBar, Breadcrumb

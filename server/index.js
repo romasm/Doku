@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const config = require('./config');
 const api = require('./api');
+const { startWatcher, sseHandler } = require('./watcher');
 
 const app = express();
 const PORT = config.port;
@@ -10,6 +11,7 @@ const PORT = config.port;
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 
+app.get('/api/events', sseHandler);
 app.use('/api', api);
 
 // Serve static frontend in production
@@ -18,6 +20,8 @@ app.use(express.static(distPath));
 app.get('{*path}', (req, res) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
+
+startWatcher();
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

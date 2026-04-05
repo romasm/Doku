@@ -7,7 +7,7 @@ Since Doku stores everything as plain `.md` files, you can edit them with any to
 
 ## Editing with a Text Editor
 
-Open any file in the `docs/` folder with VS Code, Notepad++, Vim, or any other editor. Changes are picked up by Doku on the next page load.
+Open any file in the `docs/` folder with VS Code, Notepad++, Vim, or any other editor. Changes are detected automatically and reflected in the browser within moments — no manual reload needed.
 
 Things to keep in mind:
 
@@ -27,7 +27,7 @@ You can create new `.md` files directly on disk:
 
 3. Optionally add frontmatter with an `ordering` value
 
-4. Reload Doku in the browser to see the new file
+4. The new file appears in the sidebar automatically
 
 ## Creating Folders Manually
 
