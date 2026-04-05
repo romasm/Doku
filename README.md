@@ -19,6 +19,17 @@ A personal documentation system that stores docs as plain Markdown files and pro
 - **Breadcrumb navigation** — clickable path segments to navigate parent pages
 - **No database** — the filesystem is the single source of truth
 
+## AI-Friendly
+
+Doku is designed to work well with AI agents and coding assistants:
+
+- **Plain Markdown** — all docs are standard `.md` files that AI agents can read and write directly
+- **CLAUDE.md** — project conventions and rules for AI assistants working on the codebase
+- **AGENTS.md** — detailed instructions for AI agents creating, editing, and organizing documentation files (frontmatter rules, folder conventions, ordering guidelines)
+- **Simple file structure** — no database, no binary formats, no proprietary storage. Just files and folders that any tool can work with
+- **CLI init** — agents can scaffold new doc projects with `npx @romansmirnov/doku init ./path`
+- **REST API** — all operations available via HTTP endpoints for programmatic access
+
 ## Quick Start
 
 ```bash
