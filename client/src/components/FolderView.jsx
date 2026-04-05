@@ -6,6 +6,7 @@ import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
 import { fetchFolder, saveFolderIndex, uploadImage } from '../api';
 import { parseFrontmatter, serializeFrontmatter } from '../frontmatter';
+import { blocksToMarkdown, preprocessMarkdown, restoreImageWidths } from '../imageMarkdown';
 import { useTheme } from '../useTheme';
 import { FileTextIcon, FolderOpenIcon, MaximizeIcon, MinimizeIcon } from './icons';
 import Breadcrumb from './Breadcrumb';
@@ -38,7 +39,9 @@ export default function FolderView({ folderPath, onTreeChange, fullWidth, onTogg
           frontmatterRef.current = frontmatter;
           (async () => {
             try {
-              const blocks = await editor.tryParseMarkdownToBlocks(body);
+              const { processed, imageProps } = preprocessMarkdown(body);
+              const blocks = await editor.tryParseMarkdownToBlocks(processed);
+              restoreImageWidths(blocks, imageProps);
               editor.replaceBlocks(editor.document, blocks);
             } catch {
               editor.replaceBlocks(editor.document, [
@@ -55,10 +58,14 @@ export default function FolderView({ folderPath, onTreeChange, fullWidth, onTogg
   const handleChange = useCallback(async () => {
     clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(async () => {
-      const md = await editor.blocksToMarkdownLossy(editor.document);
-      const full = serializeFrontmatter(frontmatterRef.current, md);
-      await saveFolderIndex(folderPath, full);
-      onTreeChange();
+      try {
+        const md = await blocksToMarkdown(editor);
+        const full = serializeFrontmatter(frontmatterRef.current, md);
+        await saveFolderIndex(folderPath, full);
+        onTreeChange();
+      } catch (err) {
+        console.error('Auto-save failed:', err);
+      }
     }, 1000);
   }, [editor, folderPath, onTreeChange]);
 

@@ -57,15 +57,17 @@ This is your first document. You can edit it using the web UI or any text editor
 `);
 }
 
+// Read config back to show actual values (handles pre-existing config.json)
+const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+
 console.log(`
   Doku initialized in ${targetDir}
 
-  Project name: ${projectName}
-  Port: 4782
+  Project name: ${config.projectName}
+  Port: ${config.port || 4782}
 
   To start:
     npx @romansmirnov/doku ${targetArg}
 
-  Or with the convenience script:
-    open_docs.bat ${targetArg}
+  Then open http://localhost:${config.port || 4782} in your browser.
 `);

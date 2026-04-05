@@ -4,6 +4,7 @@ import { BlockNoteView } from '@blocknote/mantine';
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
 import { parseFrontmatter, serializeFrontmatter } from '../frontmatter';
+import { blocksToMarkdown, preprocessMarkdown, restoreImageWidths } from '../imageMarkdown';
 import { useTheme } from '../useTheme';
 import { uploadImage } from '../api';
 import { DeleteIcon, MaximizeIcon, MinimizeIcon } from './icons';
@@ -30,7 +31,9 @@ export default function Editor({ content, docPath, onSave, onDelete, isFolder, f
       frontmatterRef.current = frontmatter;
       (async () => {
         try {
-          const blocks = await editor.tryParseMarkdownToBlocks(body);
+          const { processed, imageProps } = preprocessMarkdown(body);
+          const blocks = await editor.tryParseMarkdownToBlocks(processed);
+          restoreImageWidths(blocks, imageProps);
           editor.replaceBlocks(editor.document, blocks);
         } catch {
           editor.replaceBlocks(editor.document, [
@@ -44,9 +47,13 @@ export default function Editor({ content, docPath, onSave, onDelete, isFolder, f
   const handleChange = useCallback(async () => {
     clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(async () => {
-      const md = await editor.blocksToMarkdownLossy(editor.document);
-      const full = serializeFrontmatter(frontmatterRef.current, md);
-      onSave(full);
+      try {
+        const md = await blocksToMarkdown(editor);
+        const full = serializeFrontmatter(frontmatterRef.current, md);
+        await onSave(full);
+      } catch (err) {
+        console.error('Auto-save failed:', err);
+      }
     }, 1000);
   }, [editor, onSave]);
 
