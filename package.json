@@ -1,6 +1,6 @@
 {
   "name": "dokudocs",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Personal documentation system with Markdown storage and WYSIWYG editing",
   "main": "server/index.js",
   "bin": {
