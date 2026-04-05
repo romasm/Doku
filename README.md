@@ -27,17 +27,17 @@ Doku is designed to work well with AI agents and coding assistants:
 - **CLAUDE.md** — project conventions and rules for AI assistants working on the codebase
 - **AGENTS.md** — detailed instructions for AI agents creating, editing, and organizing documentation files (frontmatter rules, folder conventions, ordering guidelines)
 - **Simple file structure** — no database, no binary formats, no proprietary storage. Just files and folders that any tool can work with
-- **CLI init** — agents can scaffold new doc projects with `npx @romansmirnov/doku init ./path`
+- **CLI init** — agents can scaffold new doc projects with `npx dokudocs init ./path`
 - **REST API** — all operations available via HTTP endpoints for programmatic access
 
 ## Quick Start
 
 ```bash
 # Initialize a new docs folder
-npx @romansmirnov/doku init ./my-docs
+npx dokudocs init ./my-docs
 
 # Start the server
-npx @romansmirnov/doku ./my-docs
+npx dokudocs ./my-docs
 ```
 
 Open `http://localhost:4782` in your browser.

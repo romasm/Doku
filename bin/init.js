@@ -4,8 +4,8 @@ const path = require('path');
 const targetArg = process.argv[3];
 
 if (!targetArg) {
-  console.error('Usage: doku init <path>');
-  console.error('Example: doku init ./my-docs');
+  console.error('Usage: dokudocs init <path>');
+  console.error('Example: dokudocs init ./my-docs');
   process.exit(1);
 }
 
@@ -67,7 +67,7 @@ console.log(`
   Port: ${config.port || 4782}
 
   To start:
-    npx @romansmirnov/doku ${targetArg}
+    npx dokudocs ${targetArg}
 
   Then open http://localhost:${config.port || 4782} in your browser.
 `);

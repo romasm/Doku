@@ -11,14 +11,26 @@ export default function SearchBar({ onSelect }) {
   const timerRef = useRef(null);
   const wrapperRef = useRef(null);
 
+  const inputRef = useRef(null);
+
   useEffect(() => {
     function handleClickOutside(e) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
         setOpen(false);
       }
     }
+    function handleGlobalKeyDown(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleGlobalKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleGlobalKeyDown);
+    };
   }, []);
 
   function handleChange(e) {
@@ -63,16 +75,23 @@ export default function SearchBar({ onSelect }) {
     onSelect(result.path);
   }
 
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
   function highlightSnippet(snippet) {
-    if (!snippet || !query.trim()) return snippet;
-    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    return snippet.replace(regex, '<mark>$1</mark>');
+    if (!snippet || !query.trim()) return escapeHtml(snippet);
+    const escaped = escapeHtml(snippet);
+    const escapedQuery = escapeHtml(query);
+    const regex = new RegExp(`(${escapedQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return escaped.replace(regex, '<mark>$1</mark>');
   }
 
   return (
     <div className="search-wrapper" ref={wrapperRef}>
       <span className="search-icon"><SearchIcon size={14} /></span>
       <input
+        ref={inputRef}
         type="text"
         className="search-input"
         placeholder="Search... (Ctrl+K)"

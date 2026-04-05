@@ -12,7 +12,7 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
 
 ## Project Structure
 
-- `bin/` — CLI entry point (`doku init`, `doku serve`)
+- `bin/` — CLI entry point (`dokudocs init`, `dokudocs serve`)
 - `server/` — Express API (file CRUD, tree, search, image upload)
   - `index.js` — server entry point
   - `api.js` — REST API routes

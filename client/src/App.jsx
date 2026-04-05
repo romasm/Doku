@@ -147,6 +147,14 @@ export default function App() {
     [loadTree, navigate]
   );
 
+  const handleToggleWidth = useCallback(() => {
+    setFullWidth((v) => {
+      const nv = !v;
+      localStorage.setItem('doku-full-width', nv);
+      return nv;
+    });
+  }, []);
+
   const handleSearchSelect = useCallback(
     (docPath) => {
       navigate(`/doc/${docPath}`);
@@ -169,11 +177,11 @@ export default function App() {
           <Routes>
             <Route
               path="/"
-              element={<DocPage onTreeChange={loadTree} fullWidth={fullWidth} onToggleWidth={() => { setFullWidth(v => { const nv = !v; localStorage.setItem('doku-full-width', nv); return nv; }); }} />}
+              element={<DocPage onTreeChange={loadTree} fullWidth={fullWidth} onToggleWidth={handleToggleWidth} />}
             />
             <Route
               path="/doc/*"
-              element={<DocPage onTreeChange={loadTree} fullWidth={fullWidth} onToggleWidth={() => { setFullWidth(v => { const nv = !v; localStorage.setItem('doku-full-width', nv); return nv; }); }} />}
+              element={<DocPage onTreeChange={loadTree} fullWidth={fullWidth} onToggleWidth={handleToggleWidth} />}
             />
           </Routes>
         </div>

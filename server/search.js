@@ -10,7 +10,7 @@ function getAllMdFiles(dir, basePath = '') {
     const fullPath = path.join(dir, entry.name);
     const relativePath = basePath ? `${basePath}/${entry.name}` : entry.name;
 
-    if (entry.isDirectory() && !entry.name.startsWith('.')) {
+    if (entry.isDirectory() && !entry.name.startsWith('.') && entry.name !== 'assets') {
       results.push(...getAllMdFiles(fullPath, relativePath));
     } else if (entry.name.endsWith('.md')) {
       results.push({ fullPath, relativePath });

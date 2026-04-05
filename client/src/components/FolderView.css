@@ -8,6 +8,16 @@
   margin-bottom: 24px;
 }
 
+.folder-editor .bn-editor {
+  padding: 0;
+  background: var(--color-bg) !important;
+  color: var(--color-text) !important;
+}
+
+.folder-editor .bn-container {
+  background: var(--color-bg) !important;
+}
+
 .folder-children {
   border-top: 1px solid var(--color-border);
   padding-top: 16px;

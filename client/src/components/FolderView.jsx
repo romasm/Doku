@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { useCreateBlockNote } from '@blocknote/react';
 import { BlockNoteView } from '@blocknote/mantine';
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
-import { fetchFolder, saveFolderIndex, uploadImage } from '../api';
-import { parseFrontmatter, serializeFrontmatter } from '../frontmatter';
-import { blocksToMarkdown, preprocessMarkdown, restoreImageWidths } from '../imageMarkdown';
+import { fetchFolder, saveFolderIndex } from '../api';
+import { useDocEditor } from '../useDocEditor';
 import { useTheme } from '../useTheme';
 import { FileTextIcon, FolderOpenIcon, MaximizeIcon, MinimizeIcon } from './icons';
 import Breadcrumb from './Breadcrumb';
@@ -15,59 +13,27 @@ import './FolderView.css';
 export default function FolderView({ folderPath, onTreeChange, fullWidth, onToggleWidth }) {
   const [folder, setFolder] = useState(null);
   const [loading, setLoading] = useState(true);
-  const saveTimerRef = useRef(null);
-  const frontmatterRef = useRef({});
   const editorContainerRef = useRef(null);
   const theme = useTheme();
 
-  const editor = useCreateBlockNote({
-    initialContent: undefined,
-    uploadFile: async (file) => {
-      const result = await uploadImage(file);
-      return result.url;
+  const handleSave = useCallback(
+    async (content) => {
+      await saveFolderIndex(folderPath, content);
+      onTreeChange();
     },
-  });
+    [folderPath, onTreeChange]
+  );
+
+  const { editor, handleChange } = useDocEditor(folder?.content, handleSave);
 
   useEffect(() => {
     if (!folderPath) return;
     setLoading(true);
     fetchFolder(folderPath)
-      .then((data) => {
-        setFolder(data);
-        if (editor && data.content) {
-          const { frontmatter, body } = parseFrontmatter(data.content);
-          frontmatterRef.current = frontmatter;
-          (async () => {
-            try {
-              const { processed, imageProps } = preprocessMarkdown(body);
-              const blocks = await editor.tryParseMarkdownToBlocks(processed);
-              restoreImageWidths(blocks, imageProps);
-              editor.replaceBlocks(editor.document, blocks);
-            } catch {
-              editor.replaceBlocks(editor.document, [
-                { type: 'paragraph', content: [{ type: 'text', text: body }] },
-              ]);
-            }
-          })();
-        }
-      })
+      .then((data) => setFolder(data))
       .catch(() => setFolder(null))
       .finally(() => setLoading(false));
-  }, [folderPath, editor]);
-
-  const handleChange = useCallback(async () => {
-    clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(async () => {
-      try {
-        const md = await blocksToMarkdown(editor);
-        const full = serializeFrontmatter(frontmatterRef.current, md);
-        await saveFolderIndex(folderPath, full);
-        onTreeChange();
-      } catch (err) {
-        console.error('Auto-save failed:', err);
-      }
-    }, 1000);
-  }, [editor, folderPath, onTreeChange]);
+  }, [folderPath]);
 
   if (loading) return <div className="loading">Loading...</div>;
   if (!folder) return <div className="not-found">Folder not found.</div>;

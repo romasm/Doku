@@ -10,6 +10,16 @@ const { parseFrontmatter, extractTitle, formatName } = require('./frontmatter');
 const router = express.Router();
 const DOCS_DIR = config.docsPath;
 
+// Entries to exclude from tree and search
+const EXCLUDED_NAMES = new Set(['.', '_meta.json', 'config.json', 'assets']);
+
+// Validate that a resolved path is inside DOCS_DIR (prevents path traversal)
+function safePath(...segments) {
+  const resolved = path.resolve(DOCS_DIR, ...segments);
+  if (!resolved.startsWith(path.resolve(DOCS_DIR))) return null;
+  return resolved;
+}
+
 // GET /api/config — public config for frontend
 router.get('/config', (req, res) => {
   res.json({ projectName: config.projectName });
@@ -35,7 +45,7 @@ const upload = multer({
     },
   }),
   fileFilter: (req, file, cb) => {
-    const allowed = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.bmp'];
+    const allowed = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp'];
     const ext = path.extname(file.originalname).toLowerCase();
     cb(null, allowed.includes(ext));
   },
@@ -73,6 +83,10 @@ function getFileMeta(filePath) {
   }
 }
 
+function isExcluded(name) {
+  return name.startsWith('.') || EXCLUDED_NAMES.has(name);
+}
+
 // Build the file tree. Convention: if name.md and name/ both exist as siblings,
 // name.md is the folder's index file and shown as a folder (not a separate file).
 function buildTree(dirPath, basePath = '') {
@@ -84,7 +98,7 @@ function buildTree(dirPath, basePath = '') {
   );
 
   for (const entry of entries) {
-    if (entry.name.startsWith('.') || entry.name === '_meta.json' || entry.name === 'config.json' || entry.name === 'assets') continue;
+    if (isExcluded(entry.name)) continue;
 
     const relativePath = basePath ? `${basePath}/${entry.name}` : entry.name;
 
@@ -159,9 +173,9 @@ router.get('/tree', (req, res) => {
 // GET /api/doc/* — read a doc
 router.get('/doc/{*docPath}', (req, res) => {
   const docPath = getDocPath(req.params);
-  const filePath = path.join(DOCS_DIR, docPath + '.md');
+  const filePath = safePath(docPath + '.md');
 
-  if (!filePath.startsWith(DOCS_DIR)) {
+  if (!filePath) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
@@ -170,8 +184,8 @@ router.get('/doc/{*docPath}', (req, res) => {
   }
 
   // Check if this doc has a matching folder (i.e. it's a folder index)
-  const folderPath = path.join(DOCS_DIR, docPath);
-  const isFolder = fs.existsSync(folderPath) && fs.statSync(folderPath).isDirectory();
+  const folderPath = safePath(docPath);
+  const isFolder = folderPath && fs.existsSync(folderPath) && fs.statSync(folderPath).isDirectory();
 
   const content = fs.readFileSync(filePath, 'utf-8');
   const stat = fs.statSync(filePath);
@@ -181,9 +195,9 @@ router.get('/doc/{*docPath}', (req, res) => {
 // PUT /api/doc/* — create or update a doc
 router.put('/doc/{*docPath}', (req, res) => {
   const docPath = getDocPath(req.params);
-  const filePath = path.join(DOCS_DIR, docPath + '.md');
+  const filePath = safePath(docPath + '.md');
 
-  if (!filePath.startsWith(DOCS_DIR)) {
+  if (!filePath) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
@@ -196,12 +210,12 @@ router.put('/doc/{*docPath}', (req, res) => {
   res.json({ success: true, path: docPath });
 });
 
-// DELETE /api/doc/* — delete a doc
+// DELETE /api/doc/* — delete a doc (and its sibling folder if present)
 router.delete('/doc/{*docPath}', (req, res) => {
   const docPath = getDocPath(req.params);
-  const filePath = path.join(DOCS_DIR, docPath + '.md');
+  const filePath = safePath(docPath + '.md');
 
-  if (!filePath.startsWith(DOCS_DIR)) {
+  if (!filePath) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
@@ -209,12 +223,18 @@ router.delete('/doc/{*docPath}', (req, res) => {
     return res.status(404).json({ error: 'Not found' });
   }
 
+  // If this doc is a folder index (has a sibling folder), remove the folder and its contents too
+  const siblingFolder = safePath(docPath);
+  if (siblingFolder && fs.existsSync(siblingFolder) && fs.statSync(siblingFolder).isDirectory()) {
+    fs.rmSync(siblingFolder, { recursive: true, force: true });
+  }
+
   fs.unlinkSync(filePath);
 
   // Auto-cleanup: if the parent folder is now empty, remove it
   // so the sibling .md reverts to a plain doc
   const parentDir = path.dirname(filePath);
-  if (parentDir !== DOCS_DIR) {
+  if (parentDir !== path.resolve(DOCS_DIR)) {
     cleanupEmptyFolder(parentDir);
   }
 
@@ -224,9 +244,9 @@ router.delete('/doc/{*docPath}', (req, res) => {
 // POST /api/folder — create a folder (also used to convert a doc into a folder)
 router.post('/folder', (req, res) => {
   const { path: folderPath } = req.body;
-  const fullPath = path.join(DOCS_DIR, folderPath);
+  const fullPath = safePath(folderPath);
 
-  if (!fullPath.startsWith(DOCS_DIR)) {
+  if (!fullPath) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
@@ -245,14 +265,14 @@ router.post('/folder', (req, res) => {
   res.json({ success: true, path: folderPath });
 });
 
-// POST /api/move — move/rename a doc or folder
+// POST /api/move — move/rename a doc or folder (handles folder-doc pairs)
 router.post('/move', (req, res) => {
   const { from, to } = req.body;
 
-  const fromPath = path.join(DOCS_DIR, from.endsWith('.md') ? from : from + '.md');
-  const toPath = path.join(DOCS_DIR, to.endsWith('.md') ? to : to + '.md');
+  const fromPath = safePath(from.endsWith('.md') ? from : from + '.md');
+  const toPath = safePath(to.endsWith('.md') ? to : to + '.md');
 
-  if (!fromPath.startsWith(DOCS_DIR) || !toPath.startsWith(DOCS_DIR)) {
+  if (!fromPath || !toPath) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
@@ -265,16 +285,25 @@ router.post('/move', (req, res) => {
     fs.mkdirSync(toDir, { recursive: true });
   }
 
+  // Move the .md file
   fs.renameSync(fromPath, toPath);
+
+  // If there's a sibling folder, move it too
+  const fromFolder = fromPath.replace(/\.md$/, '');
+  const toFolder = toPath.replace(/\.md$/, '');
+  if (fs.existsSync(fromFolder) && fs.statSync(fromFolder).isDirectory()) {
+    fs.renameSync(fromFolder, toFolder);
+  }
+
   res.json({ success: true });
 });
 
 // GET /api/folder/* — get folder index content (from sibling .md) + children
 router.get('/folder/{*docPath}', (req, res) => {
   const folderPath = getDocPath(req.params);
-  const fullPath = path.join(DOCS_DIR, folderPath);
+  const fullPath = safePath(folderPath);
 
-  if (!fullPath.startsWith(DOCS_DIR)) {
+  if (!fullPath) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 

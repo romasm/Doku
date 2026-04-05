@@ -1,10 +1,10 @@
 {
-  "name": "@romansmirnov/doku",
+  "name": "dokudocs",
   "version": "1.0.5",
   "description": "Personal documentation system with Markdown storage and WYSIWYG editing",
   "main": "server/index.js",
   "bin": {
-    "doku": "bin/doku.js"
+    "dokudocs": "bin/doku.js"
   },
   "files": [
     "bin/",
@@ -36,7 +36,6 @@
     "url": "https://github.com/romasm/Doku.git"
   },
   "dependencies": {
-    "chokidar": "^5.0.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "glob": "^13.0.6",
