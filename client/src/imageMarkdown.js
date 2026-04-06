@@ -223,21 +223,33 @@ function replaceHtmlEntities(text) {
 // Returns { text, codeBlocks } where text has placeholders and codeBlocks is an array.
 
 const CODE_PLACEHOLDER_PREFIX = '\uFFF1CB\uFFF1';
+const INLINE_CODE_PREFIX = '\uFFF1IC\uFFF1';
 
 function extractCodeBlocks(text) {
   const codeBlocks = [];
-  const result = text.replace(/^(`{3,})[^\n]*\n[\s\S]*?\n\1\s*$/gm, (match) => {
+  // First extract fenced code blocks (``` ... ```)
+  let result = text.replace(/^(`{3,})[^\n]*\n[\s\S]*?\n\1\s*$/gm, (match) => {
     const idx = codeBlocks.length;
     codeBlocks.push(match);
     return `${CODE_PLACEHOLDER_PREFIX}${idx}`;
+  });
+  // Then extract inline code spans (`...` and ``...``)
+  result = result.replace(/(`{1,2})(?!`)(.+?)(?<!`)\1(?!`)/g, (match) => {
+    const idx = codeBlocks.length;
+    codeBlocks.push(match);
+    return `${INLINE_CODE_PREFIX}${idx}`;
   });
   return { text: result, codeBlocks };
 }
 
 function restoreCodeBlocks(text, codeBlocks) {
-  return text.replace(new RegExp(`${CODE_PLACEHOLDER_PREFIX}(\\d+)`, 'g'), (_, idx) => {
-    return codeBlocks[parseInt(idx, 10)] || '';
-  });
+  return text
+    .replace(new RegExp(`${INLINE_CODE_PREFIX}(\\d+)`, 'g'), (_, idx) => {
+      return codeBlocks[parseInt(idx, 10)] || '';
+    })
+    .replace(new RegExp(`${CODE_PLACEHOLDER_PREFIX}(\\d+)`, 'g'), (_, idx) => {
+      return codeBlocks[parseInt(idx, 10)] || '';
+    });
 }
 
 // ── Export: blocks → markdown ───────────────────────────────────────────────

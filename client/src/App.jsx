@@ -6,6 +6,12 @@ import FolderView from './components/FolderView';
 import { fetchConfig, fetchTree, fetchDoc, saveDoc, deleteDoc, createFolder } from './api';
 import './App.css';
 
+// Track last user edit to suppress hot reload while editing
+const EDIT_COOLDOWN_MS = 10000;
+let lastEditTime = 0;
+export function markUserEdit() { lastEditTime = Date.now(); }
+function isUserEditing() { return Date.now() - lastEditTime < EDIT_COOLDOWN_MS; }
+
 function DocPage({ onTreeChange, fullWidth, onToggleWidth }) {
   const params = useParams();
   const navigate = useNavigate();
@@ -32,11 +38,11 @@ function DocPage({ onTreeChange, fullWidth, onToggleWidth }) {
       .finally(() => setLoading(false));
   }, [docPath]);
 
-  // Re-fetch when the file is changed externally
+  // Re-fetch when the file is changed externally (skip if user is actively editing)
   useEffect(() => {
     function onDocChanged(e) {
       const changedPath = e.detail.replace(/\.md$/, '');
-      if (changedPath === docPath) {
+      if (changedPath === docPath && !isUserEditing()) {
         reloadDoc();
       }
     }

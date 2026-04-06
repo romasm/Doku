@@ -6,6 +6,7 @@ import { createHighlighter } from 'shiki';
 import { parseFrontmatter, serializeFrontmatter } from './frontmatter';
 import { blocksToMarkdown, preprocessMarkdown, restoreBlockProps } from './imageMarkdown';
 import { uploadImage } from './api';
+import { markUserEdit } from './App';
 
 // Create schema with Shiki syntax highlighting.
 // createHighlighter returns a promise — BlockNote's prosemirror-highlight plugin
@@ -91,6 +92,7 @@ export function useDocEditor(content, onSave) {
   }, []);
 
   const handleChange = useCallback(async () => {
+    markUserEdit();
     clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(async () => {
       try {

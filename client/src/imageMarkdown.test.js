@@ -351,6 +351,51 @@ describe('preprocessMarkdown: code block protection', () => {
   });
 });
 
+// ── Inline code protection ──────────────────────────────────────────────────
+
+describe('preprocessMarkdown: inline code protection', () => {
+  it('does not transform ==text== inside inline code', () => {
+    const input = 'Use `Type==UserSaveSynced` here.';
+    const { processed } = preprocess(input);
+    expect(processed).toContain('`Type==UserSaveSynced`');
+    expect(processed).not.toContain(HIGHLIGHT_OPEN);
+  });
+
+  it('does not transform :emoji: inside inline code', () => {
+    const input = 'Use `:rocket:` shortcode.';
+    const { processed } = preprocess(input);
+    expect(processed).toContain('`:rocket:`');
+    expect(processed).not.toContain('\u{1F680}');
+  });
+
+  it('does not transform <ins> inside inline code', () => {
+    const input = 'Use `<ins>tag</ins>` for underline.';
+    const { processed } = preprocess(input);
+    expect(processed).toContain('`<ins>tag</ins>`');
+    expect(processed).not.toContain(UNDERLINE_OPEN);
+  });
+
+  it('does not transform &entities; inside inline code', () => {
+    const input = 'Use `&copy;` entity.';
+    const { processed } = preprocess(input);
+    expect(processed).toContain('`&copy;`');
+  });
+
+  it('does not transform double-backtick inline code', () => {
+    const input = 'Use ``Type==Synced`` here.';
+    const { processed } = preprocess(input);
+    expect(processed).toContain('``Type==Synced``');
+    expect(processed).not.toContain(HIGHLIGHT_OPEN);
+  });
+
+  it('transforms content outside inline code while preserving inside', () => {
+    const input = '==highlight== and `==not highlight==`';
+    const { processed } = preprocess(input);
+    expect(processed).toContain(HIGHLIGHT_OPEN + 'highlight' + HIGHLIGHT_CLOSE);
+    expect(processed).toContain('`==not highlight==`');
+  });
+});
+
 // ── restoreBlockProps ───────────────────────────────────────────────────────
 
 describe('restoreBlockProps', () => {
