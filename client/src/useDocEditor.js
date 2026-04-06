@@ -55,6 +55,7 @@ export function useDocEditor(content, onSave) {
   const saveTimerRef = useRef(null);
   const frontmatterRef = useRef({});
   const commentsRef = useRef([]);
+  const loadingRef = useRef(false);
 
   const editor = useCreateBlockNote({
     schema,
@@ -65,9 +66,10 @@ export function useDocEditor(content, onSave) {
     },
   });
 
-  // Load content into editor
+  // Load content into editor (suppress onChange during load to avoid spurious saves)
   useEffect(() => {
     if (editor && content !== undefined) {
+      loadingRef.current = true;
       const { frontmatter, body } = parseFrontmatter(content);
       frontmatterRef.current = frontmatter;
       (async () => {
@@ -82,6 +84,8 @@ export function useDocEditor(content, onSave) {
             { type: 'paragraph', content: [{ type: 'text', text: body }] },
           ]);
         }
+        // Allow onChange to fire saves after a short delay
+        setTimeout(() => { loadingRef.current = false; }, 200);
       })();
     }
   }, [editor, content]);
@@ -92,6 +96,7 @@ export function useDocEditor(content, onSave) {
   }, []);
 
   const handleChange = useCallback(async () => {
+    if (loadingRef.current) return;
     markUserEdit();
     clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(async () => {
