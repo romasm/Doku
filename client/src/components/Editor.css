@@ -89,6 +89,7 @@
   padding: 0;
   background: var(--color-bg) !important;
   color: var(--color-text) !important;
+  font-size: 14px !important;
 }
 
 .editor-blocknote .bn-container {
@@ -128,8 +129,11 @@
   color: var(--color-code-text) !important;
 }
 
-/* Inline code */
-.editor-blocknote code {
-  background: var(--color-code-bg) !important;
-  color: var(--color-code-text) !important;
+/* Inline code (not inside fenced code blocks) */
+.editor-blocknote .bn-inline-content > code {
+  background: var(--color-inline-code-bg) !important;
+  color: var(--color-inline-code-text) !important;
+  padding: 2px 5px !important;
+  border-radius: 4px !important;
+  font-size: 0.9em !important;
 }

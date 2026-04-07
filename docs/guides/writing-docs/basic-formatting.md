@@ -39,7 +39,7 @@ This is ~~strikethrough text~~.
 
 ## Highlight
 
-Wrap text in `==double equals==` for a yellow highlight background.
+Wrap text in double equals for a ==yellow highlight== background.
 
 ```markdown
 This is ==highlighted text==.

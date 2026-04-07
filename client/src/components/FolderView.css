@@ -12,10 +12,19 @@
   padding: 0;
   background: var(--color-bg) !important;
   color: var(--color-text) !important;
+  font-size: 14px !important;
 }
 
 .folder-editor .bn-container {
   background: var(--color-bg) !important;
+}
+
+.folder-editor .bn-inline-content > code {
+  background: var(--color-inline-code-bg) !important;
+  color: var(--color-inline-code-text) !important;
+  padding: 2px 5px !important;
+  border-radius: 4px !important;
+  font-size: 0.9em !important;
 }
 
 .folder-children {

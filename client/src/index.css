@@ -18,6 +18,8 @@
   --color-danger: #dc2626;
   --color-code-bg: #2d333b;
   --color-code-text: #adbac7;
+  --color-inline-code-bg: #f0f0f0;
+  --color-inline-code-text: #d97706;
 }
 
 [data-theme="dark"] {
@@ -32,6 +34,8 @@
   --color-danger: #f87171;
   --color-code-bg: #25262b;
   --color-code-text: #e1e3e6;
+  --color-inline-code-bg: #2c2d31;
+  --color-inline-code-text: #f0b060;
 }
 
 /* Override BlockNote's pale yellow highlight to be more visible in light theme */
