@@ -12,12 +12,32 @@ let lastEditTime = 0;
 export function markUserEdit() { lastEditTime = Date.now(); }
 function isUserEditing() { return Date.now() - lastEditTime < EDIT_COOLDOWN_MS; }
 
-function DocPage({ onTreeChange, fullWidth, onToggleWidth }) {
+// Extract title from markdown body (first # heading, fallback to slug)
+function extractDocTitle(content, docPath) {
+  if (content) {
+    const body = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
+    const match = body.match(/^#\s+(.+)$/m);
+    if (match) return match[1].trim();
+  }
+  if (docPath) {
+    const slug = docPath.split('/').pop();
+    return slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+  return null;
+}
+
+function DocPage({ onTreeChange, fullWidth, onToggleWidth, projectName }) {
   const params = useParams();
   const navigate = useNavigate();
   const docPath = params['*'] || '';
   const [doc, setDoc] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // Update browser tab title
+  useEffect(() => {
+    const title = extractDocTitle(doc?.content, docPath);
+    document.title = title ? `${projectName}: ${title}` : projectName;
+  }, [doc, docPath, projectName]);
 
   const reloadDoc = useCallback(() => {
     if (!docPath) return;
@@ -219,11 +239,11 @@ export default function App() {
           <Routes>
             <Route
               path="/"
-              element={<DocPage onTreeChange={loadTree} fullWidth={fullWidth} onToggleWidth={handleToggleWidth} />}
+              element={<DocPage onTreeChange={loadTree} fullWidth={fullWidth} onToggleWidth={handleToggleWidth} projectName={projectName} />}
             />
             <Route
               path="/doc/*"
-              element={<DocPage onTreeChange={loadTree} fullWidth={fullWidth} onToggleWidth={handleToggleWidth} />}
+              element={<DocPage onTreeChange={loadTree} fullWidth={fullWidth} onToggleWidth={handleToggleWidth} projectName={projectName} />}
             />
           </Routes>
         </div>

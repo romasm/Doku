@@ -5,7 +5,7 @@
 .emoji-picker-trigger {
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: 1.3rem;
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -21,7 +21,7 @@
 }
 
 .emoji-picker-trigger.has-emoji {
-  font-size: 1rem;
+  font-size: 1.3rem;
 }
 
 .emoji-picker-dropdown {

@@ -4,7 +4,7 @@ import SearchBar from './SearchBar';
 import { FileTextIcon, FolderOpenIcon, ChevronRightIcon, PlusIcon, SunIcon, MoonIcon } from './icons';
 import './Sidebar.css';
 
-const ICON_SIZE = 16;
+const ICON_SIZE = 18;
 
 function TreeItem({ item, onNewDoc }) {
   const [expanded, setExpanded] = useState(true);
