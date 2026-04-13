@@ -107,6 +107,9 @@ Purple right-aligned
 - [x] Done task
 - [ ] Pending task
 
+<!--blockProps:{"backgroundColor":"yellow"}-->
+After-list colored paragraph
+
 | Col A | Col B |
 | --- | --- |
 | Cell 1 | Cell 2 |
@@ -202,6 +205,9 @@ describe('API roundtrip', () => {
     expect(doc.content).toContain('<!--blockProps:{"textColor":"red"}-->');
     expect(doc.content).toContain('<!--blockProps:{"textAlignment":"center"}-->');
     expect(doc.content).toContain('<!--blockProps:{"backgroundColor":"blue"}-->');
+    // Block props after list items (regression: index mismatch when lists merge into one md part)
+    expect(doc.content).toContain('<!--blockProps:{"backgroundColor":"yellow"}-->');
+    expect(doc.content).toContain('After-list colored paragraph');
   });
 
   it('preserves code block content unchanged', async () => {

@@ -562,58 +562,55 @@ function injectInlineMarkers(blocks) {
 }
 
 // Collect non-default block-level metadata (textColor, backgroundColor, textAlignment)
-// Returns an array of { index, meta } where index is the top-level block position.
+// Injects a unique marker into each styled block's content so the marker travels through
+// blocksToMarkdownLossy and can be found reliably in the output (index-based matching
+// breaks when list items merge or empty paragraphs are omitted).
 function collectBlockMeta(blocks) {
+  const BLOCK_META_SAVE_MARKER = '\uFFF0BM';
   const result = [];
-  for (let i = 0; i < blocks.length; i++) {
-    const block = blocks[i];
-    const meta = {};
+  let markerIdx = 0;
+  for (const block of blocks) {
     const p = block.props;
     if (!p) continue;
+    const meta = {};
     if (p.textColor && p.textColor !== 'default') meta.textColor = p.textColor;
     if (p.backgroundColor && p.backgroundColor !== 'default') meta.backgroundColor = p.backgroundColor;
     if (p.textAlignment && p.textAlignment !== 'left') meta.textAlignment = p.textAlignment;
     if (Object.keys(meta).length > 0) {
-      result.push({ index: i, meta });
+      const marker = `${BLOCK_META_SAVE_MARKER}${markerIdx}\uFFF0`;
+      // Inject marker at the start of the block's first text content
+      if (block.content && Array.isArray(block.content)) {
+        const firstText = block.content.find(c => c.type === 'text');
+        if (firstText) {
+          firstText.text = marker + (firstText.text || '');
+        } else {
+          block.content.unshift({ type: 'text', text: marker, styles: {} });
+        }
+      } else if (block.type !== 'image') {
+        block.content = [{ type: 'text', text: marker, styles: {} }];
+      }
+      result.push({ marker, meta });
+      markerIdx++;
     }
   }
   return result;
 }
 
 // Insert <!--blockProps:{...}--> comments before matching blocks in the markdown output.
-// Strategy: split markdown into blocks (separated by blank lines), match by block index.
+// Strategy: find unique markers injected by collectBlockMeta and replace them with comments.
 function injectBlockMetaComments(md, blockMeta) {
   if (blockMeta.length === 0) return md;
 
-  // Split into "blocks" separated by blank lines
-  const parts = md.split(/\n\n/);
-  const result = [];
-
-  // Build a map from block index (counting non-empty content blocks) to metadata
-  // blockMeta entries have an `index` field set during collectBlockMeta
-  const metaByIndex = new Map();
-  for (const entry of blockMeta) {
-    metaByIndex.set(entry.index, entry.meta);
+  for (const { marker, meta } of blockMeta) {
+    const comment = `${BLOCK_PROPS_PREFIX}${JSON.stringify(meta)}${BLOCK_PROPS_SUFFIX}`;
+    const escaped = marker.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    // Find the marker in the markdown — it sits at the start of the block text,
+    // possibly after a markdown line prefix (e.g. "# " or "- ").
+    // Capture the prefix, drop the marker, and insert the comment on the line above.
+    md = md.replace(new RegExp(`^(.*?)${escaped}`, 'm'), `${comment}\n$1`);
   }
 
-  let blockIdx = 0;
-  for (const part of parts) {
-    const trimmed = part.trim();
-    if (!trimmed) {
-      result.push(part);
-      continue;
-    }
-
-    if (metaByIndex.has(blockIdx)) {
-      const comment = `${BLOCK_PROPS_PREFIX}${JSON.stringify(metaByIndex.get(blockIdx))}${BLOCK_PROPS_SUFFIX}`;
-      result.push(comment + '\n' + part);
-    } else {
-      result.push(part);
-    }
-    blockIdx++;
-  }
-
-  return result.join('\n\n');
+  return md;
 }
 
 // Split text on marker tokens and tag each segment with its styles.
