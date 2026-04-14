@@ -49,7 +49,7 @@ A single-user documentation app that stores docs as `.md` files on disk and prov
 - Any document can be converted into a folder by clicking the **+** button — this creates a subfolder with the doc's name, and the original `.md` file becomes the folder's index.
 - The tree hides `.md` files that have a matching sibling folder (they are shown as the folder instead).
 - Each `.md` file can have YAML frontmatter with an `ordering` field (hidden in the UI). Items with ordering come first (ascending), then items without (alphabetical). Files and folders intermix freely.
-- Each `.md` file can optionally have an `icon` field in frontmatter (an emoji string). When set, the emoji replaces the default file/folder icon in the sidebar. Users can set it via the emoji picker in the toolbar (powered by emoji-mart).
+- Each `.md` file can optionally have an `icon` field in frontmatter. The value is a bare unicode emoji character — no quotes, no colons, no shortcodes, no surrounding symbols of any kind (e.g. `icon: 🚀`, not `icon: "🚀"` or `icon: :rocket:`). When set, the emoji replaces the default file/folder icon in the sidebar. Users can set it via the emoji picker in the toolbar (powered by emoji-mart).
 - Display names come from the first `# heading` in the file. Fallback: title-cased filename.
 - When the last child is deleted from a folder, the empty folder is automatically removed (reverting to a plain doc).
 - Images are stored in `docs/assets/` and embedded via drag-and-drop or BlockNote's image block.

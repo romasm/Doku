@@ -13,7 +13,8 @@
     "icons/icons/",
     "client/src/lib/",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "AGENTS.md"
   ],
   "scripts": {
     "dev": "node server/index.js",

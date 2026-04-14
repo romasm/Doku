@@ -17,7 +17,7 @@ Content here...
 ```
 
 - The `ordering` field is a number that controls sidebar position (lower = higher). It is required for all files that should appear in a specific order.
-- The `icon` field is an optional emoji string (e.g. `🚀`). When set, it replaces the default file/folder icon in the sidebar. Users can also set this via the emoji picker in the UI.
+- The `icon` field is an optional bare unicode emoji character — no quotes, no colons, no shortcodes, no surrounding symbols of any kind (e.g. `icon: 🚀`, not `icon: "🚀"` or `icon: :rocket:`). When set, it replaces the default file/folder icon in the sidebar.
 - The first `# heading` after frontmatter becomes the display name in the sidebar. Always include one.
 - If a file has no frontmatter, add it. Never remove existing frontmatter.
 
@@ -63,7 +63,7 @@ When creating a new folder:
 
 - Preserve existing frontmatter. Never remove or change the `ordering` value unless explicitly asked.
 - Preserve the `# heading` unless the document is being renamed.
-- Do not add extra frontmatter fields beyond what Doku supports (`ordering`).
+- Do not add extra frontmatter fields beyond what Doku supports (`ordering`, `icon`).
 
 ## Deleting Documents
 

@@ -5,6 +5,10 @@ const command = process.argv[2];
 
 if (command === 'init') {
   require('./init');
+} else if (command === 'agents') {
+  const fs = require('fs');
+  const agentsPath = path.join(__dirname, '..', 'AGENTS.md');
+  process.stdout.write(fs.readFileSync(agentsPath, 'utf-8'));
 } else if (command === 'help' || command === '--help' || command === '-h') {
   console.log(`
 Doku — personal documentation system
@@ -12,6 +16,7 @@ Doku — personal documentation system
 Usage:
   dokudocs init <path>    Initialize a new docs folder
   dokudocs [path]         Start the server (default: ./docs)
+  dokudocs agents         Show instructions for AI agents
   dokudocs help           Show this help message
 
 Examples:

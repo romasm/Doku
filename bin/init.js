@@ -70,4 +70,6 @@ console.log(`
     npx dokudocs ${targetArg}
 
   Then open http://localhost:${config.port || 4782} in your browser.
+
+  AI agents: run "dokudocs agents" for file format and editing guidelines.
 `);
